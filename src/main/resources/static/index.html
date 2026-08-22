@@ -16,7 +16,7 @@
 
         <script>
             const botaoTocar = document.getElementById('botaoTocar');
-            const botaoPular = document.getElementById('botaoSkip');
+            const botaoSkip = document.getElementById('botaoSkip');
             const player = document.getElementById('musicPlayer');
             const botaoRestart = document.getElementById('botaoRestart');
             const tempos = [0.1, 1.0, 2.0, 4.0, 8.0, 15.0];
@@ -70,22 +70,25 @@
             botaoRestart.addEventListener('click' , function() {
                 clearTimeout(temporizador)
                 player.currentTime = 0;
-                limiteSegundos = tempos[indiceAtual];
-                temporizador = setTimeout(function() {
-                    botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
-                }, tempoRestante * 1000);
+                
+                if (!player.paused){
+                    const tempoTotal = tempos[indiceAtual]
+                    temporizador = setTimeout(function() {
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }, tempoTotal * 1000);
+                }
             });
             
             botaoSkip.addEventListener('click', function(){
                 if (indiceAtual < tempos.length - 1){
                     indiceAtual++;
                     clearTimeout(temporizador)
-                    tempoRestante = tempos[indiceAtual] - player.currentTime;
+                    const novoTempo = tempos[indiceAtual] - player.currentTime;
                     temporizador = setTimeout(function() {
                         player.pause();
                         player.currentTime = 0;
                         botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
-                    }, tempoRestante * 1000);
+                    }, novoTempo * 1000);
 
                     if (player.paused){
                         botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
