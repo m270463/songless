@@ -1,0 +1,207 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Songless</title>
+    </head>
+    <body>
+        <h1>Songless Unlimited - Advinhe a Música</h1>
+        
+        
+        <div>
+            <button id="botaoTocar"> Ouvir </button>
+            <button id="botaoRestart"> Recomeçar </button>
+            <button id = "botaoSkip"> Pular </button>
+            <audio id = "musicPlayer"></audio>
+        </div>
+        
+        <div>
+            <input type = "text" id = "campoResposta" placeholder= "Digite o nome da música">
+            <button id = "botaoChute"> Advinhar </button>
+        </div>
+        
+        <h2 id = "mensagem"> </h2>
+
+
+        <div id = "historico"> </div>
+        
+        <script>
+            const botaoTocar = document.getElementById('botaoTocar');
+            const botaoSkip = document.getElementById('botaoSkip');
+            const player = document.getElementById('musicPlayer');
+            const botaoRestart = document.getElementById('botaoRestart');
+            const campoResposta = document.getElementById('campoResposta');
+            campoResposta.value = '';
+            const botaoChute = document.getElementById('botaoChute');
+            const historico = document.getElementById('historico');
+            const mensagem = document.getElementById('mensagem');
+            const tempos = [0.1, 1.0, 2.0, 4.0, 8.0, 15.0];
+            let indiceAtual = 0;
+            let temporizador;
+            let jogoFinalizado = false;
+            let musicaAtual = null;
+
+            function carregarMusica(){
+                fetch('/api/musica')
+                .then(resposta => resposta.json())
+                .then(musica => {
+                    musicaAtual = musica;
+                    player.src = musica.linkAudio;
+                });
+            };
+
+
+            carregarMusica();
+            
+            function adicionarHistorico(texto){
+                const item = document.createElement('p');
+                item.innerText = texto;
+                historico.appendChild(item);
+            }
+
+            function gerenciarChute(){
+                const chute = campoResposta.value.trim();
+                if (!chute || !musicaAtual){
+                    return;
+                }
+
+                if (chute.toLowerCase() == musicaAtual.nome.toLowerCase()){
+                    adicionarHistorico(musicaAtual.nome);
+                    vencerJogo();
+                    return;
+                }
+                mensagem.innerText = 'você errou';
+                adicionarHistorico(campoResposta.value);
+                campoResposta.value = '';
+                avancarNivel();
+            }
+
+            function avancarNivel(){
+                if (indiceAtual < tempos.length - 1){
+                    indiceAtual++;
+                    clearTimeout(temporizador)
+                    const novoTempo = tempos[indiceAtual] - player.currentTime;
+                    temporizador = setTimeout(function() {
+                        player.pause();
+                        player.currentTime = 0;
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }, novoTempo * 1000);
+
+                    if (player.paused){
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }
+                    if (indiceAtual == tempos.length - 1){
+                        botaoSkip.innerText = 'desistir';
+                    }
+                    return;
+                }
+                perderJogo();
+            }
+            
+            function vencerJogo(){
+                clearTimeout(temporizador);
+                mensagem.innerText = 'você venceu';
+                player.currentTime = 0;
+                player.play();
+                botaoTocar.innerText = 'pausar';
+                desativar();
+            }
+
+            function perderJogo(){
+                clearTimeout(temporizador);
+                player.pause;
+                player.currentTime = 0;
+                botaoTocar.innerText = 'ouvir';
+                mensagem.innerText =  `você perdeu, a resposta correta era ${musicaAtual.nome}`;
+                desativar();
+            }
+
+            function desativar(){
+                jogoFinalizado = true;
+                botaoChute.disabled = true;
+                botaoSkip.disabled = true;
+                campoResposta.disabled = true;
+
+            }
+    
+
+            botaoChute.addEventListener('click',function(){
+                gerenciarChute();
+            });
+
+            campoResposta.addEventListener('keypress', function(e){
+                if (e.key == 'Enter'){
+                    gerenciarChute();
+                }
+            });
+
+
+            botaoTocar.addEventListener('click' ,function()  {
+                if (!jogoFinalizado){
+                    if (!player.paused){
+                        player.pause();
+                        clearTimeout(temporizador);
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                        return;
+                    }
+
+                    botaoTocar.innerText = 'Pausar';
+                    const limiteSegundos = tempos[indiceAtual];
+
+                    if (player.currentTime >= limiteSegundos){
+                        player.currentTime = 0;
+                    }
+
+                    const tempoRestante = limiteSegundos - player.currentTime;
+
+                    const promessaPlay = player.play();
+                    if (promessaPlay !== undefined) {
+                        promessaPlay.catch(() => {
+
+                        });
+                    }
+
+
+                    temporizador = setTimeout(function() {
+                        player.pause();
+                        player.currentTime = 0;
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }, tempoRestante * 1000);
+                }
+                else{
+                    if (!player.paused){
+                        player.pause();
+                        botaoTocar.innerText = 'ouvir';
+                        return;
+                    }
+                    player.play()
+                    botaoTocar.innerText = 'pausar';
+                }
+            });
+        
+
+            botaoRestart.addEventListener('click' , function() {
+                clearTimeout(temporizador)
+                player.currentTime = 0;
+
+                if (!player.paused && !jogoFinalizado){
+                    const tempoTotal = tempos[indiceAtual]
+                    temporizador = setTimeout(function() {
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }, tempoTotal * 1000);
+                }
+            });
+            
+            botaoSkip.addEventListener('click', function(){
+                avancarNivel();
+                adicionarHistorico('skipped');
+            
+            });
+
+        </script>
+
+
+
+    </body>
+    </html>
