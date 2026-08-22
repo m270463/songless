@@ -1,32 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Songless</title>
-</head>
-<body>
-    <h1>Songless Unlimited - Advinhe a Música</h1>
-    
-    <button id="botaoTocar"> Ouvir 1 segundo</button>
-
-    <audio id = "musicPlayer"></audio>
-
-    <script>
-        const botao = document.getElementById('botaoTocar');
-        const player = document.getElementById('musicPlayer');
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Songless</title>
+    </head>
+    <body>
+        <h1>Songless Unlimited - Advinhe a Música</h1>
         
-        botao.addEventListener('click', function() {
-            fetch('/api/musica')
-            .then(resposta => resposta.json())
-            .then(musica => {
-                player.src = musica.linkAudio;
-                player.play();
+        <button id="botaoTocar"> Ouvir </button>
+
+        <!-- <button id = "botaoSkip"> Pular </button> -->
+
+        <audio id = "musicPlayer"></audio>
+
+        <script>
+            const botaoTocar = document.getElementById('botaoTocar');
+            // const botaoPular = document.getElementById('botaoSkip');
+            const player = document.getElementById('musicPlayer');
+            const tempos = [5.0];
+            let indiceAtual = 0;
+            let temporizador;
+
+            function carregarMusica(){
+                fetch('/api/musica')
+                .then(resposta => resposta.json())
+                .then(musica => {
+                    player.src = musica.linkAudio;
+                });
+            };
+
+
+            carregarMusica();
+            
+            botaoTocar.addEventListener('click' ,function()  {
+                if (!player.paused){
+                    player.pause();
+                    clearTimeout(temporizador);
+                    botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    return;
+                }
+
+                botaoTocar.innerText = 'Pausar';
+                const limiteSegundos = tempos[indiceAtual];
+
+                if (player.currentTime >= limiteSegundos){
+                    player.currentTime = 0;
+                }
+
+                const tempoRestante = limiteSegundos - player.currentTime;
+
+                const promessaPlay = player.play();
+                if (promessaPlay !== undefined) {
+                    promessaPlay.catch(() => {
+
+                    });
+                }
+
+
+                temporizador = setTimeout(function() {
+                    player.pause();
+                    player.currentTime = 0;
+                    botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                }, tempoRestante * 1000);
             });
-        });
-    </script>
+        </script>
 
 
 
-</body>
-</html>
+    </body>
+    </html>

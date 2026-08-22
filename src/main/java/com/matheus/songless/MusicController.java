@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MusicController {
     @GetMapping("/api/musica")
     public Musica sortear(){
-        String linkAudio = "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3";
+        String linkAudio = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
         return new Musica("Somebody to Love", "Queen", "A Night at the Opera", 1976, linkAudio);
     }
 }
