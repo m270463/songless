@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Songless</title>
+</head>
+<body>
+    <h1>Songless Unlimited - Advinhe a Música</h1>
+    
+    <button id="botaoTocar"> Ouvir 1 segundo</button>
+
+    <audio id = "musicPlayer"></audio>
+
+    <script>
+        const botao = document.getElementById('botaoTocar');
+        const player = document.getElementById('musicPlayer');
+        
+        botao.addEventListener('click', function() {
+            fetch('/api/musica')
+            .then(resposta => resposta.json())
+            .then(musica => {
+                player.src = musica.linkAudio;
+                player.play();
+            });
+        });
+    </script>
+
+
+
+</body>
+</html>
