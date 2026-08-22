@@ -8,17 +8,28 @@
     <body>
         <h1>Songless Unlimited - Advinhe a Música</h1>
         
-        <button id="botaoTocar"> Ouvir </button>
-        <button id="botaoRestart"> Recomeçar </button>
-        <button id = "botaoSkip"> Pular </button>
+        <div id = "historico"> </div>
 
-        <audio id = "musicPlayer"></audio>
+        <div>
+            <button id="botaoTocar"> Ouvir </button>
+            <button id="botaoRestart"> Recomeçar </button>
+            <button id = "botaoSkip"> Pular </button>
+            <audio id = "musicPlayer"></audio>
+        </div>
+
+        <div>
+            <input type = "text" id = "campoResposta" placeholder= "Digite o nome da música">
+            <button id = "botaoChute"> Advinhar </button>
+        </div>
+
+    
 
         <script>
             const botaoTocar = document.getElementById('botaoTocar');
             const botaoSkip = document.getElementById('botaoSkip');
             const player = document.getElementById('musicPlayer');
             const botaoRestart = document.getElementById('botaoRestart');
+            const campoResposta = document.getElementById('campoResposta');
             const tempos = [0.1, 1.0, 2.0, 4.0, 8.0, 15.0];
             let indiceAtual = 0;
             let temporizador;
@@ -70,7 +81,7 @@
             botaoRestart.addEventListener('click' , function() {
                 clearTimeout(temporizador)
                 player.currentTime = 0;
-                
+
                 if (!player.paused){
                     const tempoTotal = tempos[indiceAtual]
                     temporizador = setTimeout(function() {
