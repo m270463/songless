@@ -10,16 +10,16 @@
         
         <button id="botaoTocar"> Ouvir </button>
         <button id="botaoRestart"> Recomeçar </button>
-        <!-- <button id = "botaoSkip"> Pular </button> -->
+        <button id = "botaoSkip"> Pular </button>
 
         <audio id = "musicPlayer"></audio>
 
         <script>
             const botaoTocar = document.getElementById('botaoTocar');
-            // const botaoPular = document.getElementById('botaoSkip');
+            const botaoPular = document.getElementById('botaoSkip');
             const player = document.getElementById('musicPlayer');
             const botaoRestart = document.getElementById('botaoRestart');
-            const tempos = [5.0];
+            const tempos = [0.1, 1.0, 2.0, 4.0, 8.0, 15.0];
             let indiceAtual = 0;
             let temporizador;
 
@@ -75,6 +75,27 @@
                     botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
                 }, tempoRestante * 1000);
             });
+            
+            botaoSkip.addEventListener('click', function(){
+                if (indiceAtual < tempos.length - 1){
+                    indiceAtual++;
+                    clearTimeout(temporizador)
+                    tempoRestante = tempos[indiceAtual] - player.currentTime;
+                    temporizador = setTimeout(function() {
+                        player.pause();
+                        player.currentTime = 0;
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }, tempoRestante * 1000);
+
+                    if (player.paused){
+                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                    }
+                    if (indiceAtual == tempos.length - 1){
+                        botaoSkip.disabled = true;
+                    }
+                }
+            });
+
         </script>
 
 
