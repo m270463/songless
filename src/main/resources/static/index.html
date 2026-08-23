@@ -16,11 +16,13 @@
             <audio id = "musicPlayer"></audio>
         </div>
         
-        <div>
-            <input type = "text" id = "campoResposta" placeholder= "Digite o nome da música">
-            <button id = "botaoChute"> Advinhar </button>
+        <div class="autocomplete-wrapper">
+            <input type="text" id="campoResposta" placeholder="Digite o nome da música" autocomplete="off">
+            <button id="botaoChute">Adivinhar</button>
+            <ul id="sugestoes" class="listaSugestoes"></ul>
         </div>
-        
+
+
         <h2 id = "mensagem"> </h2>
 
 
@@ -32,7 +34,7 @@
             const player = document.getElementById('musicPlayer');
             const botaoRestart = document.getElementById('botaoRestart');
             const campoResposta = document.getElementById('campoResposta');
-            campoResposta.value = '';
+            const listaSugestoes = document.getElementById('sugestoes');
             const botaoChute = document.getElementById('botaoChute');
             const historico = document.getElementById('historico');
             const mensagem = document.getElementById('mensagem');
@@ -41,6 +43,72 @@
             let temporizador;
             let jogoFinalizado = false;
             let musicaAtual = null;
+            let timeoutId = null;   
+            let indiceAtivo = 0;
+            campoResposta.value = '';
+
+            campoResposta.addEventListener('input', function() {
+                clearTimeout(timeoutId);
+                const termo = campoResposta.value;
+                if (termo.length < 2){
+                    listaSugestoes.innerHTML = '';
+                    return;
+                }
+
+                timeoutId = setTimeout(function() {
+                    buscarSugestoes(termo);
+                },250);
+            });
+
+            async function buscarSugestoes(termo){
+                const resp = await fetch(`/api/autocomplete?termo=${termo}`);
+                const sugestoes = await resp.json();
+                exibirSugestoes(sugestoes);
+            }
+
+            function exibirSugestoes(sugestoes){
+                listaSugestoes.innerHTML = '';
+                sugestoes.forEach(texto => {
+                    const elemento = document.createElement('li');
+                    elemento.textContent = texto;
+                    elemento.addEventListener('click' , function(){
+                        selecionar(texto);
+                    });
+                    listaSugestoes.appendChild(elemento);
+                })
+            }
+
+            function selecionar(texto){
+                campoResposta.value = texto;
+                gerenciarChute();
+                listaSugestoes.innerHTML = '';
+            }
+
+            campoResposta.addEventListener('keydown', (e) => {
+            const itens = listaSugestoes.querySelectorAll('li');
+            if (!itens.length) return;
+
+            if (e.key === 'ArrowDown') {
+                indiceAtivo = (indiceAtivo + 1) % itens.length;
+            } else if (e.key === 'ArrowUp') {
+                indiceAtivo = (indiceAtivo - 1 + itens.length) % itens.length;
+            } else if (e.key === 'Enter' && indiceAtivo >= 0) {
+                e.preventDefault();
+                selecionar(itens[indiceAtivo].textContent);
+            }
+            });
+
+
+            document.addEventListener('click', (e) => {
+            if (!e.target.closest('.autocomplete-wrapper')) {
+                listaSugestoes.innerHTML = '';
+            }
+            });
+
+
+
+
+
 
             function carregarMusica(){
                 botaoTocar.disabled = true;
@@ -72,7 +140,7 @@
                     return;
                 }
 
-                if (chute.toLowerCase() == musicaAtual.nome.toLowerCase()){
+                if (chute.split(' - ')[0].toLowerCase() == musicaAtual.nome.toLowerCase()){
                     adicionarHistorico(musicaAtual.nome);
                     vencerJogo();
                     return;
@@ -86,6 +154,7 @@
             function avancarNivel(){
                 if (indiceAtual < tempos.length - 1){
                     indiceAtual++;
+                    botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
                     if (!player.paused){
                         clearTimeout(temporizador)
                         const novoTempo = tempos[indiceAtual] - player.currentTime;
@@ -95,12 +164,9 @@
                             botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
                         }, novoTempo * 1000);
 
-                        if (player.paused){
-                            botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
-                        }
-                        if (indiceAtual == tempos.length - 1){
-                            botaoSkip.innerText = 'desistir';
-                        }
+                    }
+                    if (indiceAtual == tempos.length - 1){
+                        botaoSkip.innerText = 'desistir';
                     }
                     return;
                 }
@@ -121,7 +187,7 @@
                 player.pause;
                 player.currentTime = 0;
                 botaoTocar.innerText = 'ouvir';
-                mensagem.innerText =  `você perdeu, a resposta correta era ${musicaAtual.nome}`;
+                mensagem.innerText =  `você perdeu, a resposta correta era ${musicaAtual.nome} - ${musicaAtual.artista}`;
                 desativar();
             }
 
@@ -212,6 +278,9 @@
                 adicionarHistorico('skipped');
             
             });
+
+
+
 
         </script>
 
