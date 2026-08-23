@@ -10,32 +10,25 @@ public class Musica {
     private int anoLancamento;
     private String linkAudio;
     private int id;
-    private long deezerId;
+    private long appId;
     private String genero;
     private LocalDateTime ultimaAtualizacao;
+    private String linkImagem;
+    private String linkRedirect;
     
     public Musica() {
     }
 
-    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio) {
+    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio,  long appId, String genero, String linkImagem, String linkRedirect) {
         this.nome = nome;
         this.artista = artista;
         this.album = album;
         this.anoLancamento = anoLancamento;
         this.linkAudio = linkAudio;
-    }
-
-
-    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio, int id, long deezerId, String genero, LocalDateTime ultimaAtualizacao) {
-        this.nome = nome;
-        this.artista = artista;
-        this.album = album;
-        this.anoLancamento = anoLancamento;
-        this.linkAudio = linkAudio;
-        this.id = id;
-        this.deezerId = deezerId;
+        this.appId = appId;
         this.genero = genero;
-        this.ultimaAtualizacao = ultimaAtualizacao;
+        this.linkImagem = linkImagem;
+        this.linkRedirect = linkRedirect;
     }
 
     public String getNome() {
@@ -86,12 +79,12 @@ public class Musica {
         this.id = id;
     }
 
-    public long getDeezerId() {
-        return deezerId;
+    public long getAppId() {
+        return appId;
     }
 
-    public void setDeezerId(long deezerId) {
-        this.deezerId = deezerId;
+    public void setAppId(long appId) {
+        this.appId = appId;
     }
 
     public String getGenero() {
@@ -109,4 +102,14 @@ public class Musica {
     public void setUltimaAtualizacao(LocalDateTime ultimaAtualizacao) {
         this.ultimaAtualizacao = ultimaAtualizacao;
     }
+
+    public String getLinkImagem(){
+        return this.linkImagem;
+    }
+
+    public String getLinkRedirecionamento(){
+        return this.linkRedirect;
+    }
+
+    
 }

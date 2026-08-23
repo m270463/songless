@@ -1,7 +1,6 @@
 package com.matheus.songless;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +16,7 @@ public class MusicaRepositorio {
     private final String password = Config.getSENHADB();
 
     public void salvarMusica(Musica musica){
-        String sql = "INSERT INTO musicas (nome, artista, album, anoLancamento, linkAudio, genero, deezerId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO musicasApple (nome, artista, album, anoLancamento, linkAudio, genero, appleId, linkImagem, linkRedirecionamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conexao = DriverManager.getConnection(url, user, password);
             PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
                 stmt.setString(1, musica.getNome());
@@ -26,7 +25,9 @@ public class MusicaRepositorio {
                 stmt.setInt(4, musica.getAnoLancamento());
                 stmt.setString(5, musica.getLinkAudio());
                 stmt.setString(6, musica.getGenero());
-                stmt.setLong(7, musica.getDeezerId());
+                stmt.setLong(7, musica.getAppId());
+                stmt.setString(8,musica.getLinkImagem());
+                stmt.setString(9,musica.getLinkRedirecionamento());
                 stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()){
@@ -42,7 +43,7 @@ public class MusicaRepositorio {
     }
 
     public Musica escolherAleatoria(){
-        String sql = "SELECT * FROM musicas ORDER BY RANDOM() LIMIT 1";
+        String sql = "SELECT * FROM musicasApple ORDER BY RANDOM() LIMIT 1";
         try (Connection conexao = DriverManager.getConnection(url,user,password);
             Statement stmt = conexao.createStatement()){
                 try (ResultSet rs = stmt.executeQuery(sql)){
@@ -52,10 +53,12 @@ public class MusicaRepositorio {
                                         rs.getString("album"),
                                         rs.getInt("anoLancamento"),
                                         rs.getString("linkAudio"),
-                                        rs.getInt("id"),
-                                        rs.getLong("deezerId"),
+                                        rs.getLong("appleId"),
                                         rs.getString("genero"),
-                                        rs.getTimestamp("ultimaAtualizacao") != null ? rs.getTimestamp("ultimaAtualizacao").toLocalDateTime() : null);
+                                        rs.getString("linkImagem"),
+                                        rs.getString("linkRedirecionamento"));
+                        musica.setId(rs.getInt("id"));
+                        musica.setUltimaAtualizacao(rs.getTimestamp("ultimaAtualizacao").toLocalDateTime());
                         return musica;
                     }
 
@@ -68,7 +71,5 @@ public class MusicaRepositorio {
         
         
         return null;
-    }
+    }   
 }
-
-
