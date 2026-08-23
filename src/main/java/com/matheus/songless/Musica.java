@@ -1,37 +1,115 @@
 package com.matheus.songless;
 
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
 public class Musica {
     private String nome;
     private String artista;
     private String album;
     private int anoLancamento;
     private String linkAudio;
+    private int id;
+    private long appId;
+    private String genero;
+    private LocalDateTime ultimaAtualizacao;
+    private String linkImagem;
+    private String linkRedirect;
+    
+    public Musica() {
+    }
 
-    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio){
+    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio,  long appId, String genero, String linkImagem, String linkRedirect) {
         this.nome = nome;
         this.artista = artista;
         this.album = album;
         this.anoLancamento = anoLancamento;
         this.linkAudio = linkAudio;
+        this.appId = appId;
+        this.genero = genero;
+        this.linkImagem = linkImagem;
+        this.linkRedirect = linkRedirect;
     }
 
-    public String getNome(){
+    public String getNome() {
         return nome;
     }
 
-    public String getArtista(){
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getArtista() {
         return artista;
     }
 
-    public String getAlbum(){
+    public void setArtista(String artista) {
+        this.artista = artista;
+    }
+
+    public String getAlbum() {
         return album;
     }
 
-    public int getAnoLancamento(){
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public int getAnoLancamento() {
         return anoLancamento;
     }
 
-    public String getLinkAudio(){
+    public void setAnoLancamento(int anoLancamento) {
+        this.anoLancamento = anoLancamento;
+    }
+
+    public String getLinkAudio() {
         return linkAudio;
     }
+
+    public void setLinkAudio(String linkAudio) {
+        this.linkAudio = linkAudio;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getAppId() {
+        return appId;
+    }
+
+    public void setAppId(long appId) {
+        this.appId = appId;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
+    public LocalDateTime getUltimaAtualizacao() {
+        return ultimaAtualizacao;
+    }
+
+    public void setUltimaAtualizacao(LocalDateTime ultimaAtualizacao) {
+        this.ultimaAtualizacao = ultimaAtualizacao;
+    }
+
+    public String getLinkImagem(){
+        return this.linkImagem;
+    }
+
+    public String getLinkRedirecionamento(){
+        return this.linkRedirect;
+    }
+
+    
 }

@@ -36,18 +36,24 @@
             const botaoChute = document.getElementById('botaoChute');
             const historico = document.getElementById('historico');
             const mensagem = document.getElementById('mensagem');
-            const tempos = [0.1, 1.0, 2.0, 4.0, 8.0, 15.0];
+            const tempos = [0.5, 1.0, 2.0, 4.0, 8.0, 15.0];
             let indiceAtual = 0;
             let temporizador;
             let jogoFinalizado = false;
             let musicaAtual = null;
 
             function carregarMusica(){
+                botaoTocar.disabled = true;
+                botaoRestart.disabled = true;
+                botaoSkip.disabled = true;
                 fetch('/api/musica')
                 .then(resposta => resposta.json())
                 .then(musica => {
                     musicaAtual = musica;
                     player.src = musica.linkAudio;
+                    botaoTocar.disabled = false;
+                    botaoRestart.disabled = false;
+                    botaoSkip.disabled = false;
                 });
             };
 
@@ -80,19 +86,21 @@
             function avancarNivel(){
                 if (indiceAtual < tempos.length - 1){
                     indiceAtual++;
-                    clearTimeout(temporizador)
-                    const novoTempo = tempos[indiceAtual] - player.currentTime;
-                    temporizador = setTimeout(function() {
-                        player.pause();
-                        player.currentTime = 0;
-                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
-                    }, novoTempo * 1000);
+                    if (!player.paused){
+                        clearTimeout(temporizador)
+                        const novoTempo = tempos[indiceAtual] - player.currentTime;
+                        temporizador = setTimeout(function() {
+                            player.pause();
+                            player.currentTime = 0;
+                            botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                        }, novoTempo * 1000);
 
-                    if (player.paused){
-                        botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
-                    }
-                    if (indiceAtual == tempos.length - 1){
-                        botaoSkip.innerText = 'desistir';
+                        if (player.paused){
+                            botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                        }
+                        if (indiceAtual == tempos.length - 1){
+                            botaoSkip.innerText = 'desistir';
+                        }
                     }
                     return;
                 }
@@ -157,10 +165,16 @@
 
                     const promessaPlay = player.play();
                     if (promessaPlay !== undefined) {
-                        promessaPlay.catch(() => {
-
+                        promessaPlay.then(() => {
+                            temporizador = setTimeout(function() {
+                                player.pause();
+                                player.currentTime = 0;
+                                botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
+                            }, tempoRestante * 1000);
+                        }).catch(() => {
+                            botaoTocar.innerText = `Ouvir (${tempos[indiceAtual]}s)`;
                         });
-                    }
+}
 
 
                     temporizador = setTimeout(function() {
