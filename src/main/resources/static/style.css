@@ -77,6 +77,7 @@ h1{
 
 .autocomplete-wrapper{
     position: relative;
+    display: flex;
 }
 
 .listaSugestoes{
@@ -97,7 +98,6 @@ h1{
 
 }
 
-
 .elementoSugestao{
     color: white;
     -webkit-text-fill-color: #fff;
@@ -106,4 +106,29 @@ h1{
     color: #fff;
     border-bottom: 1px solid #333;
     
+}
+
+
+
+#campoResposta {
+    height: 44px;
+    flex: 4;
+    padding: 0 16px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
+}
+
+#botaoChute {
+    height: 44px;
+    margin-left: 3px;
+    flex: 1;
+    background-color: #3a1db9;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
 }
