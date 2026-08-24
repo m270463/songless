@@ -132,3 +132,62 @@ h1{
     cursor: pointer;
     font-size: 14px;
 }
+
+.barra-progresso{
+    margin-top: 12px;
+    display: flex;
+    gap: 1px;
+    height: 12px;
+}
+
+.segmento{
+    background-color: #333;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.segmento:nth-child(1) { flex-grow: 0.5; }
+.segmento:nth-child(2) { flex-grow: 1; }
+.segmento:nth-child(3) { flex-grow: 2; }
+.segmento:nth-child(4) { flex-grow: 4; }
+.segmento:nth-child(5) { flex-grow: 8; }
+.segmento:nth-child(6) { flex-grow: 15; }
+
+.preenchimento{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background-color: #c6bdcb;
+}
+
+
+
+.wrapper-barra {
+    position: relative;
+    padding-top: 18px;
+}
+
+.marcador {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+    font-size: 13px;
+    /* margin-left removido para não quebrar o alinhamento */
+    transition: left 0.2s ease; /* Deixa o movimento do marcador suave */
+}
+
+.marcador-texto {
+    margin-bottom: 2px;
+}
+
+.marcador-seta {
+    font-size: 10px;
+    line-height: 1;
+}

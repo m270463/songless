@@ -19,6 +19,25 @@
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
         </div>
+    
+        
+        <div class="wrapper-barra">
+
+                <div class="marcador">
+                    <span class="marcador-texto">0.5s</span>
+                    <span class="marcador-seta">▼</span>
+                </div>
+
+                <div class="barra-progresso">
+                    <div class="segmento"><div class="preenchimento"></div></div>
+                    <div class="segmento"><div class="preenchimento"></div></div>
+                    <div class="segmento"><div class="preenchimento"></div></div>
+                    <div class="segmento"><div class="preenchimento"></div></div>
+                    <div class="segmento"><div class="preenchimento"></div></div>
+                    <div class="segmento"><div class="preenchimento"></div></div>
+                </div>
+        
+        </div>
 
 
         <div class="controles-player">
@@ -87,6 +106,26 @@
             }
 
 
+            function atualizarMarcador() {
+                const segmentoAtivo = document.querySelectorAll('.segmento')[indiceAtual];
+                const wrapper = document.querySelector('.wrapper-barra');
+                const marcador = document.querySelector('.marcador');
+                const textoMarcador = document.querySelector('.marcador-texto');
+
+                if (!segmentoAtivo || !wrapper || !marcador) return;
+
+                const rectSegmento = segmentoAtivo.getBoundingClientRect();
+                const rectWrapper = wrapper.getBoundingClientRect();
+
+                const posicaoFinal = rectSegmento.right - rectWrapper.left;
+
+                marcador.style.left = posicaoFinal + 'px';
+                marcador.style.transform = 'translateX(-50%)';
+
+                textoMarcador.textContent = tempos[indiceAtual] + 's';
+            }
+
+            window.addEventListener('resize', atualizarMarcador);
 
             campoResposta.addEventListener('input', function() {
                 clearTimeout(timeoutId);
@@ -148,9 +187,68 @@
             });
 
 
+                const segmentos = document.querySelectorAll('.segmento');
+                let animacaoId = null;
+
+            function atualizarProgressoBarra(tempoForcado) {
+                const tempoAtual = (tempoForcado !== undefined) ? tempoForcado : player.currentTime;
+
+                segmentos.forEach((segmento, i) => {
+                    const inicio = (i === 0) ? 0 : tempos[i - 1];
+                    const fim = tempos[i];
+
+                    if (tempoAtual >= fim) {
+                        // Segmento completado em branco
+                        segmento.style.background = '#ffffff'; 
+                    } else if (tempoAtual <= inicio) {
+                        // Segmento futuro em cinza escuro
+                        segmento.style.background = '#333333'; 
+                    } else {
+                        // Preenchimento progressivo em branco
+                        const porcentagem = ((tempoAtual - inicio) / (fim - inicio)) * 100;
+                        segmento.style.background = `linear-gradient(90deg, #ffffff ${porcentagem}%, #333333 ${porcentagem}%)`;
+                    }
+                });
+            }
+
+                // Loop de alta precisão (60 FPS) enquanto o áudio toca
+                function animarProgresso() {
+                    atualizarProgressoBarra();
+                    if (!player.paused) {
+                        animacaoId = requestAnimationFrame(animarProgresso);
+                    }
+                }
+
+                // Inicia a animação fluida no Play
+                player.addEventListener('play', () => {
+                    cancelAnimationFrame(animacaoId);
+                    animacaoId = requestAnimationFrame(animarProgresso);
+                });
+
+                // Força o alinhamento perfeito no Pause
+                player.addEventListener('pause', () => {
+                    cancelAnimationFrame(animacaoId);
+                    
+                    const limiteSegundos = tempos[indiceAtual];
+                    
+                    // Se parou perto do limite final do nível, força o preenchimento em 100% no gap exato
+                    if (Math.abs(player.currentTime - limiteSegundos) < 0.2 || player.currentTime >= limiteSegundos) {
+                        atualizarProgressoBarra(limiteSegundos);
+                    } else {
+                        atualizarProgressoBarra();
+                    }
+                });
 
 
 
+            player.addEventListener('canplaythrough', () => {
+                botaoTocar.disabled = false;
+                botaoRestart.disabled = false;
+                botaoSkip.disabled = false;
+            });
+
+
+ 
 
             function carregarMusica(){
                 botaoTocar.disabled = true;
@@ -160,15 +258,17 @@
                 .then(resposta => resposta.json())
                 .then(musica => {
                     musicaAtual = musica;
-                    player.src = musica.linkAudio;
                     botaoTocar.disabled = false;
                     botaoRestart.disabled = false;
                     botaoSkip.disabled = false;
+                    player.src = musica.linkAudio;
+                    player.load();
                 });
             };
 
 
             carregarMusica();
+            atualizarMarcador();
             
             function adicionarHistorico(texto,acertou){
                 const linha = historico.children[indiceAtual];
@@ -200,15 +300,15 @@
             function avancarNivel(){
                 if (indiceAtual < tempos.length - 1){
                     indiceAtual++;
-                    // botaoTocar.innerText = '';
+                    atualizarMarcador();
+                    
                     if (!player.paused){
                         clearTimeout(temporizador)
                         const novoTempo = tempos[indiceAtual] - player.currentTime;
                         temporizador = setTimeout(function() {
                             player.pause();
                             atualizaSvg();
-                            player.currentTime = 0;
-                            // botaoTocar.innerText = '';
+                            // player.currentTime = 0;
                         }, novoTempo * 1000);
 
                     }
@@ -260,19 +360,21 @@
 
             botaoTocar.addEventListener('click' ,function()  {
                 if (!jogoFinalizado){
+                    
+                    const limiteSegundos = tempos[indiceAtual];
+                    if (player.currentTime >= limiteSegundos - 0.15){
+                        player.currentTime = 0;
+                    }
+
+
                     if (!player.paused){
                         player.pause();
                         atualizaSvg();
                         clearTimeout(temporizador);
-                        // botaoTocar.innerText = '';
+                        
                         return;
                     }
 
-                    const limiteSegundos = tempos[indiceAtual];
-                    
-                    if (player.currentTime >= limiteSegundos){
-                        player.currentTime = 0;
-                    }
                     
                     const tempoRestante = limiteSegundos - player.currentTime;
                     
@@ -283,11 +385,10 @@
                             temporizador = setTimeout(function() {
                                 player.pause();
                                 atualizaSvg();
-                                player.currentTime = 0;
-                                // botaoTocar.innerText = '';
+              
                             }, tempoRestante * 1000);
                         }).catch(() => {
-                            // botaoTocar.innerText = '';
+                            
                         });
 }
                 }
@@ -306,13 +407,14 @@
             botaoRestart.addEventListener('click' , function() {
                 clearTimeout(temporizador)
                 player.currentTime = 0;
+                atualizarProgressoBarra();
 
                 if (!player.paused && !jogoFinalizado){
                     const tempoTotal = tempos[indiceAtual]
                     temporizador = setTimeout(function() {
                     player.pause();
+                    
                     atualizaSvg();
-                    player.currentTime = 0;
                     }, tempoTotal * 1000);
                 }
             });
