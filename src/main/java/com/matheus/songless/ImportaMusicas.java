@@ -25,12 +25,31 @@ public class ImportaMusicas {
             "Iron Maiden",
             "Creed"
         );
+        List<String> artistasMPB = List.of(
+            "Gal Costa",
+            "Chico Buarque",
+            "Milton Nascimento",
+            "Maria Bethânia",
+            "Roupa Nova",
+            "Zizi Possi",
+            "Tom Jobim",
+            "Ivan Lins",
+            "Elis Regina",
+            "Djavan",
+            "Tim Maia",
+            "Gozaguinha",
+            "Gilberto Gil",
+            "Rita Lee",
+            "Marina Lima",
+            "Lulu Santos",
+            "Guilherme Arantes"
+        );
 
-        String genero = "Rock";
+        String genero = "MPB";
         int totalGeralSalvo = 0;
 
         // 2. Iteração para rodar o processo para cada membro da lista
-        for (String artista : artistasRock) {
+        for (String artista : artistasMPB) {
             System.out.println("\n=== Buscando Top Hits: " + artista + " ===");
 
             ArrayList<Musica> musicas = servicoBusca.buscaTopMusicasDoArtista(artista, genero, 10); 

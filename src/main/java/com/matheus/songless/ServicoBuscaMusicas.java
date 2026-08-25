@@ -147,6 +147,9 @@ public class ServicoBuscaMusicas {
 
         long artistId = resultadosArtista.get(0).getAsJsonObject().get("artistId").getAsLong();
 
+
+
+        
         // Passo 2: Buscar as top músicas vinculadas a esse ID de artista
         String urlLookup = "https://itunes.apple.com/lookup?id=" + artistId + "&entity=song&limit=" + (limiteHits + 1);
         HttpRequest reqLookup = HttpRequest.newBuilder().uri(URI.create(urlLookup)).GET().build();
