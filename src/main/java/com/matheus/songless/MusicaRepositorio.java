@@ -44,10 +44,13 @@ public class MusicaRepositorio {
 
     public Musica escolherAleatoria(String opcao){
         String sql = "";
-
-        sql = "SELECT * FROM musicasApple WHERE artista = 'Zizi Possi' ORDER BY RANDOM() LIMIT 1";
+        if (opcao.equals("Todos"))
+            sql = "SELECT * FROM musicasApple ORDER BY RANDOM() LIMIT 1";
         if (opcao.equals("Rock")){
             sql = "SELECT * FROM musicasApple WHERE genero = 'Rock' ORDER BY RANDOM() LIMIT 1";
+        }
+        if (opcao.equals("MPB")){
+             sql = "SELECT * FROM musicasApple WHERE genero = 'MPB' ORDER BY RANDOM() LIMIT 1";
         }
         
         try (Connection conexao = DriverManager.getConnection(url,user,password);

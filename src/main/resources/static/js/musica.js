@@ -11,18 +11,18 @@ function carregarMusica(fim) {
         fetch(`/api/musica?opcao=${opcaoAtual}`)
             .then(resposta => resposta.json())
             .then(musica => {
-            //             if (!musica) {
-            //     alert('Nenhuma música encontrada para essa opção.');
-            //     botaoTocar.disabled = false;
-            //     botaoRestart.disabled = false;
-            //     botaoSkip.disabled = false;
-            //     return;
-            // }
+                        if (!musica) {
+                alert('Nenhuma música encontrada para essa opção.');
+                botaoTocar.disabled = false;
+                botaoRestart.disabled = false;
+                botaoSkip.disabled = false;
+                return;
+            }
 
 
 
-                musicaAtual = musica;
-                musicas[indiceMusicaAtual] = musica;
+            musicas[indiceMusicaAtual] = musica;
+            musicaAtual = musica;
                 botaoTocar.disabled = false;
                 botaoRestart.disabled = false;
                 botaoSkip.disabled = false;

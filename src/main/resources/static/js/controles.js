@@ -88,7 +88,7 @@ function defineAcao() {
     const momentosJogo = historico.querySelectorAll('.linhaHistorico');
     botoes.forEach((opcao, i) => {
         opcao.addEventListener('click', function() {
-            opcao.innerText;
+            opcaoAtual= listaOpcoes[i];
             indiceMusicaAtual = i;
             ajustaResto();
 
@@ -109,5 +109,17 @@ function ajustaResto(){
         opcao.disabled = false;
 
         
+    });
+}
+
+function corrigeOpcoes(){
+    const botoes = opcoesJogo.querySelectorAll('.botaoOpcao');
+    botoes.forEach(opcao => {
+        if (indiceAtual > 0){
+            opcao.disabled = true;
+        }
+        else{
+            opcao.disabled = false;
+        }
     });
 }
