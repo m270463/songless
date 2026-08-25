@@ -191,3 +191,128 @@ h1{
     font-size: 10px;
     line-height: 1;
 }
+
+
+#fimJogo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent; /* Preto com 75% de opacidade */
+    backdrop-filter: blur(4px);            /* Desfoca o jogo ao fundo */
+    display: none;
+    justify-content: center;               /* Centraliza na horizontal */
+    align-items: center;                   /* Centraliza na vertical */
+    z-index: 1000;                          /* Coloca o modal acima de tudo */
+    -webkit-text-fill-color: #fff;
+}
+
+.card {
+    background-color: #1e1e1e;
+    width: 90%;
+    max-width: 380px;                       /* Não cresce demais em monitores grandes */
+    border-radius: 16px;
+    overflow: hidden;                       /* Impede o cabeçalho de vazar das bordas */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+
+.titulo {
+    background-color: #1db954; /* Verde por padrão (Vitória) */
+    padding: 16px;
+    color: #ffffff;
+}
+
+.titulo h2 {
+    margin: 0;                   /* Remove margens padrão do H2 */
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Aplicado via JS quando o jogador perder */
+.titulo.derrota {
+    background-color: #b91d1d; /* Vermelho */
+}
+
+
+.conteudo {
+    padding: 24px 20px 16px 20px;
+    color: #ffffff;
+}
+
+.subtitulo {
+    font-size: 11px;
+    color: #888888;
+    letter-spacing: 1px;         /* Aumenta espaço entre letras */
+    margin: 0 0 4px 0;
+}
+
+#modalNomeMusica {
+    margin: 0 0 20px 0;
+    font-size: 16px;
+}
+
+.container-capa img {
+    width: 180px;
+    height: 180px;
+    border-radius: 12px;
+    object-fit: cover;           /* Evita esticar a imagem caso não seja perfeitamente quadrada */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+
+.final {
+    padding: 0 20px 20px 20px;
+}
+
+#botaoProximo {
+    width: 40%;
+    height: 44px;
+    background-color: #333;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#linkNome {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+}
+
+#modalNomeMusica:hover{
+    text-decoration: underline;
+}
+
+#linkImagem{
+    text-decoration: none;
+    color: inherit;
+}
+
+#modalCapaAlbum:hover{
+    opacity: 0.85;
+}
+
+#botaoRedirect {
+    margin-left: 2px;
+    margin-top: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;       
+}
+
+#botaoRedirect svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}

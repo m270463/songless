@@ -11,7 +11,7 @@ public class ImportaMusicas {
         ServicoBuscaMusicas servicoBusca = new ServicoBuscaMusicas();
         MusicaRepositorio repositorio = new MusicaRepositorio();
 
-        ArrayList<Musica> musicas = servicoBusca.buscaMusicasPorArtista("Djavan", "MPB", 20); 
+        ArrayList<Musica> musicas = servicoBusca.buscaMusicasPorArtista("Zizi Possi", "MPB", 100); 
 
         for (Musica m : musicas) {
             System.out.println("Salvando: " + m.getNome() + " - " + m.getArtista());

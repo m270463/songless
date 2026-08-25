@@ -7,11 +7,18 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+
+        
+        
+        
+
+
+
         <main class = "cardPrincipal">
             <h1>Songless Unlimited</h1>
             
             
-        <div id="historico" class="lista-historico">
+            <div id="historico" class="lista-historico">
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
@@ -22,12 +29,12 @@
     
         
         <div class="wrapper-barra">
-
-                <div class="marcador">
-                    <span class="marcador-texto">0.5s</span>
+            
+            <div class="marcador">
+                <span class="marcador-texto">0.5s</span>
                     <span class="marcador-seta">▼</span>
                 </div>
-
+                
                 <div class="barra-progresso">
                     <div class="segmento"><div class="preenchimento"></div></div>
                     <div class="segmento"><div class="preenchimento"></div></div>
@@ -39,7 +46,7 @@
         
         </div>
 
-
+        
         <div class="controles-player">
             
             <button id="botaoRestart" class = "musicButton"> 
@@ -47,9 +54,9 @@
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw-icon lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
                 <path d="M3 3v5h5"/></svg>
             </button>
-
-
-
+            
+            
+            
             <button id="botaoTocar" class = "musicButton" > 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play">
@@ -62,7 +69,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-forward-icon lucide-skip-forward">
                 <path d="M21 4v16"/><path d="M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z"/></svg>
-
+                
             </button>
             <audio id="musicPlayer"></audio>
         </div>
@@ -74,365 +81,48 @@
         </div>
         
         
-        <h2 id = "mensagem"> </h2>
         
         
     </main>
-        
-        <script>
-            const botaoTocar = document.getElementById('botaoTocar');
-            const botaoSkip = document.getElementById('botaoSkip');
-            const player = document.getElementById('musicPlayer');
-            const botaoRestart = document.getElementById('botaoRestart');
-            const campoResposta = document.getElementById('campoResposta');
-            const listaSugestoes = document.getElementById('sugestoes');
-            const botaoChute = document.getElementById('botaoChute');
-            const historico = document.getElementById('historico');
-            const mensagem = document.getElementById('mensagem');
-            const tempos = [0.5, 1.0, 2.0, 4.0, 8.0, 15.0];
-            let indiceAtual = 0;
-            let temporizador;
-            let jogoFinalizado = false;
-            let musicaAtual = null;
-            let timeoutId = null;   
-            let indiceAtivo = 0;
-            campoResposta.value = '';
-
-            const svgPausa = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>';
-            const svgPlay = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>';
-            
-            function atualizaSvg(){
-                player.paused ? botaoTocar.innerHTML = svgPlay : botaoTocar.innerHTML = svgPausa;
-            }
-
-
-            function atualizarMarcador() {
-                const segmentoAtivo = document.querySelectorAll('.segmento')[indiceAtual];
-                const wrapper = document.querySelector('.wrapper-barra');
-                const marcador = document.querySelector('.marcador');
-                const textoMarcador = document.querySelector('.marcador-texto');
-
-                if (!segmentoAtivo || !wrapper || !marcador) return;
-
-                const rectSegmento = segmentoAtivo.getBoundingClientRect();
-                const rectWrapper = wrapper.getBoundingClientRect();
-
-                const posicaoFinal = rectSegmento.right - rectWrapper.left;
-
-                marcador.style.left = posicaoFinal + 'px';
-                marcador.style.transform = 'translateX(-50%)';
-
-                textoMarcador.textContent = tempos[indiceAtual] + 's';
-            }
-
-            window.addEventListener('resize', atualizarMarcador);
-
-            campoResposta.addEventListener('input', function() {
-                clearTimeout(timeoutId);
-                const termo = campoResposta.value;
-                if (termo.length < 2){
-                    listaSugestoes.innerHTML = '';
-                    return;
-                }
-
-                timeoutId = setTimeout(function() {
-                    buscarSugestoes(termo);
-                },250);
-            });
-
-            async function buscarSugestoes(termo){
-                const resp = await fetch(`/api/autocomplete?termo=${termo}`);
-                const sugestoes = await resp.json();
-                exibirSugestoes(sugestoes);
-            }
-
-            function exibirSugestoes(sugestoes){
-                listaSugestoes.innerHTML = '';
-                sugestoes.forEach(texto => {
-                    const elemento = document.createElement('li');
-                    elemento.textContent = texto;
-                    elemento.addEventListener('click' , function(){
-                        selecionar(texto);
-                    });
-                    elemento.classList.add('elementoSugestao');
-                    listaSugestoes.appendChild(elemento);
-                })
-            }
-
-            function selecionar(texto){
-                campoResposta.value = texto;
-                gerenciarChute();
-                listaSugestoes.innerHTML = '';
-            }
-
-            campoResposta.addEventListener('keydown', (e) => {
-            const itens = listaSugestoes.querySelectorAll('li');
-            if (!itens.length) return;
-
-            if (e.key === 'ArrowDown') {
-                indiceAtivo = (indiceAtivo + 1) % itens.length;
-            } else if (e.key === 'ArrowUp') {
-                indiceAtivo = (indiceAtivo - 1 + itens.length) % itens.length;
-            } else if (e.key === 'Enter' && indiceAtivo >= 0) {
-                e.preventDefault();
-                selecionar(itens[indiceAtivo].textContent);
-            }
-            });
-
-
-            document.addEventListener('click', (e) => {
-            if (!e.target.closest('.autocomplete-wrapper')) {
-                listaSugestoes.innerHTML = '';
-            }
-            });
-
-
-                const segmentos = document.querySelectorAll('.segmento');
-                let animacaoId = null;
-
-            function atualizarProgressoBarra(tempoForcado) {
-                const tempoAtual = (tempoForcado !== undefined) ? tempoForcado : player.currentTime;
-
-                segmentos.forEach((segmento, i) => {
-                    const inicio = (i === 0) ? 0 : tempos[i - 1];
-                    const fim = tempos[i];
-
-                    if (tempoAtual >= fim) {
-                        // Segmento completado em branco
-                        segmento.style.background = '#ffffff'; 
-                    } else if (tempoAtual <= inicio) {
-                        // Segmento futuro em cinza escuro
-                        segmento.style.background = '#333333'; 
-                    } else {
-                        // Preenchimento progressivo em branco
-                        const porcentagem = ((tempoAtual - inicio) / (fim - inicio)) * 100;
-                        segmento.style.background = `linear-gradient(90deg, #ffffff ${porcentagem}%, #333333 ${porcentagem}%)`;
-                    }
-                });
-            }
-
-                // Loop de alta precisão (60 FPS) enquanto o áudio toca
-                function animarProgresso() {
-                    atualizarProgressoBarra();
-                    if (!player.paused) {
-                        animacaoId = requestAnimationFrame(animarProgresso);
-                    }
-                }
-
-                // Inicia a animação fluida no Play
-                player.addEventListener('play', () => {
-                    cancelAnimationFrame(animacaoId);
-                    animacaoId = requestAnimationFrame(animarProgresso);
-                });
-
-                // Força o alinhamento perfeito no Pause
-                player.addEventListener('pause', () => {
-                    cancelAnimationFrame(animacaoId);
-                    
-                    const limiteSegundos = tempos[indiceAtual];
-                    
-                    // Se parou perto do limite final do nível, força o preenchimento em 100% no gap exato
-                    if (Math.abs(player.currentTime - limiteSegundos) < 0.2 || player.currentTime >= limiteSegundos) {
-                        atualizarProgressoBarra(limiteSegundos);
-                    } else {
-                        atualizarProgressoBarra();
-                    }
-                });
-
-
-
-            player.addEventListener('canplaythrough', () => {
-                botaoTocar.disabled = false;
-                botaoRestart.disabled = false;
-                botaoSkip.disabled = false;
-            });
-
-
- 
-
-            function carregarMusica(){
-                botaoTocar.disabled = true;
-                botaoRestart.disabled = true;
-                botaoSkip.disabled = true;
-                fetch('/api/musica')
-                .then(resposta => resposta.json())
-                .then(musica => {
-                    musicaAtual = musica;
-                    botaoTocar.disabled = false;
-                    botaoRestart.disabled = false;
-                    botaoSkip.disabled = false;
-                    player.src = musica.linkAudio;
-                    player.load();
-                });
-            };
-
-
-            carregarMusica();
-            atualizarMarcador();
-            
-            function adicionarHistorico(texto,acertou){
-                const linha = historico.children[indiceAtual];
-                linha.innerText = texto;
-                if (texto == 'Skipped'){
-                    return;
-                }
-                linha.classList.add(acertou ? 'acerto' : 'erro');
-
-            }
-
-            function gerenciarChute(){
-                const chute = campoResposta.value.trim();
-                if (!chute || !musicaAtual){
-                    return;
-                }
-
-                if (chute.split(' - ')[0].toLowerCase() == musicaAtual.nome.toLowerCase()){
-                    adicionarHistorico(campoResposta.value,true);
-                    vencerJogo();
-                    return;
-                }
-                mensagem.innerText = 'você errou';
-                adicionarHistorico(campoResposta.value,false);
-                campoResposta.value = '';
-                avancarNivel();
-            }
-
-            function avancarNivel(){
-                if (indiceAtual < tempos.length - 1){
-                    indiceAtual++;
-                    atualizarMarcador();
-                    
-                    if (!player.paused){
-                        clearTimeout(temporizador)
-                        const novoTempo = tempos[indiceAtual] - player.currentTime;
-                        temporizador = setTimeout(function() {
-                            player.pause();
-                            atualizaSvg();
-                            // player.currentTime = 0;
-                        }, novoTempo * 1000);
-
-                    }
-                    // if (indiceAtual == tempos.length - 1){
-                    //     botaoSkip.innerText = 'desistir';
-                    // }
-                    return;
-                }
-                perderJogo();
-            }
-            
-            function vencerJogo(){
-                clearTimeout(temporizador);
-                mensagem.innerText = 'você venceu';
-                player.currentTime = 0;
-                player.play();
-                atualizaSvg();
-                desativar();
-            }
-
-            function perderJogo(){
-                clearTimeout(temporizador);
-                player.pause();
-                player.currentTime = 0;
-                atualizaSvg();
-                mensagem.innerText =  `você perdeu, a resposta correta era ${musicaAtual.nome} - ${musicaAtual.artista}`;
-                desativar();
-            }
-
-            function desativar(){
-                jogoFinalizado = true;
-                botaoChute.disabled = true;
-                botaoSkip.disabled = true;
-                campoResposta.disabled = true;
-
-            }
     
+            <div id="fimJogo" class="escondido">
+                <div class="card">
+                    <div id = "result" class="titulo">
+                        <h2 id="headerFim">Título</h2>
+                    </div>
 
-            botaoChute.addEventListener('click',function(){
-                gerenciarChute();
-            });
+                    <div class="conteudo"> 
+                        <p class="subtitulo">A MÚSICA ERA</p>
+                        <a id = "linkNome" target="_blank" rel="noopener noreferrer">
+                            <h3 id="modalNomeMusica">Nome - Artista</h3>
+                            <span id = "botaoRedirect">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-external-link"><path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" /><path d="M11 13l9 -9" /><path d="M15 4h5v5" /></svg>
+                            </span>
 
-            campoResposta.addEventListener('keypress', function(e){
-                if (e.key == 'Enter'){
-                    gerenciarChute();
-                }
-            });
+                        </a>
 
+                        <div class="container-capa">
+                            <a id = "linkCapa" target="_blank" rel="noopener noreferrer">
+                                <img id="modalCapaAlbum" src="" alt="Capa do Álbum">
+                            </a>
+                        </div>
+                    </div>
 
-            botaoTocar.addEventListener('click' ,function()  {
-                if (!jogoFinalizado){
-                    
-                    const limiteSegundos = tempos[indiceAtual];
-                    if (player.currentTime >= limiteSegundos - 0.15){
-                        player.currentTime = 0;
-                    }
-
-
-                    if (!player.paused){
-                        player.pause();
-                        atualizaSvg();
-                        clearTimeout(temporizador);
-                        
-                        return;
-                    }
-
-                    
-                    const tempoRestante = limiteSegundos - player.currentTime;
-                    
-                    const promessaPlay = player.play();
-                    atualizaSvg();
-                    if (promessaPlay !== undefined) {
-                        promessaPlay.then(() => {
-                            temporizador = setTimeout(function() {
-                                player.pause();
-                                atualizaSvg();
-              
-                            }, tempoRestante * 1000);
-                        }).catch(() => {
-                            
-                        });
-}
-                }
-                else{
-                    if (!player.paused){
-                        player.pause();
-                        atualizaSvg();
-                        return;
-                    }
-                    player.play()
-                    atualizaSvg();
-                }
-            });
-        
-
-            botaoRestart.addEventListener('click' , function() {
-                clearTimeout(temporizador)
-                player.currentTime = 0;
-                atualizarProgressoBarra();
-
-                if (!player.paused && !jogoFinalizado){
-                    const tempoTotal = tempos[indiceAtual]
-                    temporizador = setTimeout(function() {
-                    player.pause();
-                    
-                    atualizaSvg();
-                    }, tempoTotal * 1000);
-                }
-            });
-            
-            botaoSkip.addEventListener('click', function(){
-                adicionarHistorico('Skipped',false);
-                avancarNivel();
-            
-            });
-
-            player.addEventListener('ended', function() {
-                atualizaSvg();
-            });
-            
-
-
-
-        </script>
+                    <div class="final">
+                        <button id="botaoProximo">Next Song</button>
+                    </div>
+                </div>
+            </div>
+    <script src="js/estado.js"></script>
+    <script src="js/marcador.js"></script>
+    <script src="js/autocomplete.js"></script>
+    <script src="js/progresso.js"></script>
+    <script src="js/musica.js"></script>
+    <script src="js/jogo.js"></script>
+    <script src="js/controles.js"></script>
+    <script src="js/main.js"></script>
+    
 
 
 
