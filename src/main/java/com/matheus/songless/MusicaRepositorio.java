@@ -52,6 +52,10 @@ public class MusicaRepositorio {
         if (opcao.equals("MPB")){
              sql = "SELECT * FROM musicasApple WHERE genero = 'MPB' ORDER BY RANDOM() LIMIT 1";
         }
+
+        if (opcao.equals("Matuê")){
+            sql = "SELECT * FROM musicasApple WHERE genero = 'Matuê' ORDER BY RANDOM() LIMIT 1";
+        }
         
         try (Connection conexao = DriverManager.getConnection(url,user,password);
             Statement stmt = conexao.createStatement()){

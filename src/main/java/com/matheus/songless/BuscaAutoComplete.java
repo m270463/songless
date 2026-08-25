@@ -17,7 +17,7 @@ public class BuscaAutoComplete {
         if (termo.length() < 2)
             return resultados;
 
-        String sql = "SELECT nome, artista FROM musicasApple WHERE nome ILIKE ? OR artista ILIKE ? LIMIT 10";
+        String sql = "SELECT nome, artista FROM musicasApple WHERE nome ILIKE ? OR artista ILIKE ? LIMIT 30";
 
         try (Connection conexao = DriverManager.getConnection(Config.getURLDB(), Config.getUSERDB(), Config.getSENHADB());
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
