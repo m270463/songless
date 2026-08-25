@@ -42,8 +42,14 @@ public class MusicaRepositorio {
     
     }
 
-    public Musica escolherAleatoria(){
-        String sql = "SELECT * FROM musicasApple WHERE artista = 'Zizi Possi' ORDER BY RANDOM() LIMIT 1";
+    public Musica escolherAleatoria(String opcao){
+        String sql = "";
+
+        sql = "SELECT * FROM musicasApple WHERE artista = 'Zizi Possi' ORDER BY RANDOM() LIMIT 1";
+        if (opcao.equals("Rock")){
+            sql = "SELECT * FROM musicasApple WHERE genero = 'Rock' ORDER BY RANDOM() LIMIT 1";
+        }
+        
         try (Connection conexao = DriverManager.getConnection(url,user,password);
             Statement stmt = conexao.createStatement()){
                 try (ResultSet rs = stmt.executeQuery(sql)){

@@ -17,8 +17,11 @@ const containerFim = document.getElementById('fimJogo');
 const linkNome = document.getElementById('linkNome');
 const linkCapa = document.getElementById('linkCapa');
 const tempos = [0.5, 1.0, 2.0, 4.0, 8.0, 15.0];
-
+const opcoesJogo = document.getElementById('opcoes');
+const musicas = [null,null,null];
+let opcaoAtual = 'Todos';
 let indiceAtual = 0;
+let indiceMusicaAtual = 0;
 let temporizador;
 let jogoFinalizado = false;
 let musicaAtual = null;

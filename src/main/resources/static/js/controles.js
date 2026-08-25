@@ -68,7 +68,7 @@ botaoSkip.addEventListener('click', function() {
 
 botaoProximMusica.addEventListener('click', function() {
     containerFim.style.display = 'none';
-    carregarMusica();
+    carregarMusica(true);
 });
 
 player.addEventListener('ended', function() {
@@ -82,3 +82,32 @@ player.addEventListener('play', function(){
 player.addEventListener('pause', function(){
     atualizaSvg()
 });
+
+function defineAcao() {
+    const botoes = opcoesJogo.querySelectorAll('.botaoOpcao');
+    const momentosJogo = historico.querySelectorAll('.linhaHistorico');
+    botoes.forEach((opcao, i) => {
+        opcao.addEventListener('click', function() {
+            opcao.innerText;
+            indiceMusicaAtual = i;
+            ajustaResto();
+
+            carregarMusica(false);
+            resetar();
+            opcao.disabled = true;
+            opcao.classList.add('ativo');
+
+        });
+    });
+    botoes[0].classList.add('ativo');
+}
+
+function ajustaResto(){
+    const botoes = opcoesJogo.querySelectorAll('.botaoOpcao');
+    botoes.forEach(opcao => {
+        opcao.classList.remove('ativo');
+        opcao.disabled = false;
+
+        
+    });
+}

@@ -333,3 +333,7 @@ h1{
     color: #fff;
     border-color: transparent;
 }
+
+.botaoOpcao.ativo{
+    border-color: #fff;
+}
