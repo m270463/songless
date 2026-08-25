@@ -1,6 +1,5 @@
 package com.matheus.songless;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 public class Musica {
@@ -14,12 +13,12 @@ public class Musica {
     private String genero;
     private LocalDateTime ultimaAtualizacao;
     private String linkImagem;
-    private String linkRedirect;
+    private String linkRedirecionamento;
     
     public Musica() {
     }
 
-    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio,  long appId, String genero, String linkImagem, String linkRedirect) {
+    public Musica(String nome, String artista, String album, int anoLancamento, String linkAudio,  long appId, String genero, String linkImagem, String linkRedirecionamento) {
         this.nome = nome;
         this.artista = artista;
         this.album = album;
@@ -28,7 +27,7 @@ public class Musica {
         this.appId = appId;
         this.genero = genero;
         this.linkImagem = linkImagem;
-        this.linkRedirect = linkRedirect;
+        this.linkRedirecionamento = linkRedirecionamento;
     }
 
     public String getNome() {
@@ -108,7 +107,7 @@ public class Musica {
     }
 
     public String getLinkRedirecionamento(){
-        return this.linkRedirect;
+        return this.linkRedirecionamento;
     }
 
     
