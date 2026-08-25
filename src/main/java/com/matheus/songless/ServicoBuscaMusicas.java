@@ -35,9 +35,10 @@ public class ServicoBuscaMusicas {
         }
         return null;
     }
-    private String buscaTermo(String termo, int limite){
+    private String buscaTermo(String termo, int limite) {
+        // Adicionado &attribute=artistTerm para priorizar os hits do artista
         String url = "https://itunes.apple.com/search?term=" + URLEncoder.encode(termo, StandardCharsets.UTF_8)
-                + "&entity=song&limit=" + limite;
+                + "&entity=song&attribute=artistTerm&limit=" + limite;
         try {
             HttpClient cliente = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
@@ -122,6 +123,69 @@ public class ServicoBuscaMusicas {
 
         return musicasEncontradas;
     }
+
+
+
+    public ArrayList<Musica> buscaTopMusicasDoArtista(String nomeArtista, String generoJogo, int limiteHits) {
+    ArrayList<Musica> topHits = new ArrayList<>();
+    
+    try {
+        HttpClient cliente = HttpClient.newHttpClient();
+
+        // Passos 1: Descobrir o ID do Artista no iTunes
+        String urlBuscaArtista = "https://itunes.apple.com/search?term=" 
+                + URLEncoder.encode(nomeArtista, StandardCharsets.UTF_8) 
+                + "&entity=musicArtist&limit=1";
+
+        HttpRequest reqArtista = HttpRequest.newBuilder().uri(URI.create(urlBuscaArtista)).GET().build();
+        HttpResponse<String> respArtista = cliente.send(reqArtista, HttpResponse.BodyHandlers.ofString());
+
+        JsonObject jsonArtista = JsonParser.parseString(respArtista.body()).getAsJsonObject();
+        JsonArray resultadosArtista = jsonArtista.getAsJsonArray("results");
+
+        if (resultadosArtista.isEmpty()) return topHits; // Artista não encontrado
+
+        long artistId = resultadosArtista.get(0).getAsJsonObject().get("artistId").getAsLong();
+
+
+
+        
+        // Passo 2: Buscar as top músicas vinculadas a esse ID de artista
+        String urlLookup = "https://itunes.apple.com/lookup?id=" + artistId + "&entity=song&limit=" + (limiteHits + 1);
+        HttpRequest reqLookup = HttpRequest.newBuilder().uri(URI.create(urlLookup)).GET().build();
+        HttpResponse<String> respLookup = cliente.send(reqLookup, HttpResponse.BodyHandlers.ofString());
+
+        JsonObject jsonLookup = JsonParser.parseString(respLookup.body()).getAsJsonObject();
+        JsonArray resultadosLookup = jsonLookup.getAsJsonArray("results");
+
+        for (JsonElement el : resultadosLookup) {
+            JsonObject item = el.getAsJsonObject();
+            
+            // O primeiro resultado do lookup de artista é o próprio artista, ignoramos ele verificando wrapperType
+            if (item.has("wrapperType") && "artist".equals(item.get("wrapperType").getAsString())) {
+                continue;
+            }
+
+            if (!item.has("previewUrl") || item.get("previewUrl").isJsonNull()) continue;
+
+            String nomeMusica = item.get("trackName").getAsString();
+            String artista = item.get("artistName").getAsString();
+            String album = item.has("collectionName") ? item.get("collectionName").getAsString() : "Single";
+            int dataLancamento = Integer.parseInt(item.get("releaseDate").getAsString().substring(0, 4));
+            String linkPreview = item.get("previewUrl").getAsString();
+            String linkImagem = item.get("artworkUrl100").getAsString();
+            String linkRedirect = item.has("trackViewUrl") ? item.get("trackViewUrl").getAsString() : "";
+            long trackId = item.get("trackId").getAsLong();
+
+            topHits.add(new Musica(nomeMusica, artista, album, dataLancamento, linkPreview, trackId, generoJogo, linkImagem, linkRedirect));
+        }
+
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
+    }
+
+    return topHits;
+}
 
 
 }

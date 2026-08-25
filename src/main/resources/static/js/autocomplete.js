@@ -16,7 +16,7 @@ campoResposta.addEventListener('input', function() {
 });
 
 async function buscarSugestoes(termo) {
-    const resp = await fetch(`/api/autocomplete?termo=${termo}`);
+    const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}`);
     const sugestoes = await resp.json();
     exibirSugestoes(sugestoes);
 }

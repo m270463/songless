@@ -2,5 +2,6 @@
 // Ponto de entrada: dispara o carregamento da primeira música e o
 // posicionamento inicial do marcador.
 
-carregarMusica();
+carregarMusica(true);
 atualizarMarcador();
+defineAcao();

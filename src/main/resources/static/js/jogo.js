@@ -3,6 +3,7 @@
 // histórico de tentativas e reset para a próxima rodada.
 
 function adicionarHistorico(texto, acertou) {
+    
     const linha = historico.children[indiceAtual];
     linha.innerText = texto;
     if (texto == 'Skipped') {
@@ -31,10 +32,11 @@ function avancarNivel() {
     if (indiceAtual < tempos.length - 1) {
         indiceAtual++;
         atualizarMarcador();
-
+        corrigeOpcoes();
+        
         if (!player.paused) {
             checarLimiteAudio();
-
+            
         }
         if (indiceAtual == tempos.length - 1){
             botaoSkip.innerHTML = svgDesistir;
@@ -106,4 +108,5 @@ function resetar() {
     atualizaSvg();
     atualizarMarcador();
     atualizarProgressoBarra(0);
+    corrigeOpcoes();
 }

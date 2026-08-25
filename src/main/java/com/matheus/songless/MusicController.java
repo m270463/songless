@@ -1,6 +1,7 @@
 package com.matheus.songless;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,7 +15,7 @@ public class MusicController {
     
 
     @GetMapping("/api/musica")
-    public Musica sortear(){
-        return repositorio.escolherAleatoria();
+    public Musica sortear(@RequestParam String opcao){
+        return repositorio.escolherAleatoria(opcao);
     }
 }
