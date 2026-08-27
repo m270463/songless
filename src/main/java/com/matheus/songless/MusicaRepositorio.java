@@ -15,10 +15,30 @@ public class MusicaRepositorio {
     private final String user = Config.getUSERDB();
     private final String password = Config.getSENHADB();
 
+    private Connection conexao;
+
+    // Abre a conexão uma única vez ao criar o repositório
+    public MusicaRepositorio() {
+        try {
+
+            this.conexao = DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao conectar no banco Railway", e);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
     public void salvarMusica(Musica musica){
         String sql = "INSERT INTO musicasApple (nome, artista, album, anoLancamento, linkAudio, genero, appleId, linkImagem, linkRedirecionamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conexao = DriverManager.getConnection(url, user, password);
-            PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+        try (PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
                 stmt.setString(1, musica.getNome());
                 stmt.setString(2, musica.getArtista());
                 stmt.setString(3, musica.getAlbum());
