@@ -187,5 +187,164 @@ public class ServicoBuscaMusicas {
     return topHits;
 }
 
+// ServicoBuscaMusicas.java
+
+private String buscaLastFmTopTracks(String artista, int limite) {
+    String url = "https://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks"
+            + "&artist=" + URLEncoder.encode(artista, StandardCharsets.UTF_8)
+            + "&api_key=" + Config.getLASTFMAPIKEY()
+            + "&format=json&limit=" + limite;
+    try {
+        HttpClient cliente = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
+private Musica buscaFaixaExataNoItunes(String nomeFaixa, String nomeArtista, String generoJogo) {
+    String termo = nomeFaixa + " " + nomeArtista;
+    String url = "https://itunes.apple.com/search?term=" + URLEncoder.encode(termo, StandardCharsets.UTF_8)
+            + "&entity=song&limit=1&country=BR";
+    try {
+        HttpClient cliente = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        JsonObject resposta = JsonParser.parseString(response.body()).getAsJsonObject();
+        JsonArray resultados = resposta.getAsJsonArray("results");
+
+        if (resultados.isEmpty()) return null;
+
+        JsonObject musica = resultados.get(0).getAsJsonObject();
+        if (!musica.has("previewUrl") || musica.get("previewUrl").isJsonNull()) return null;
+
+        String nomeMusica = musica.get("trackName").getAsString();
+        String artistaReal = musica.get("artistName").getAsString();
+        String album = musica.has("collectionName") ? musica.get("collectionName").getAsString() : "Single";
+        int ano = Integer.parseInt(musica.get("releaseDate").getAsString().substring(0, 4));
+        String linkPreview = musica.get("previewUrl").getAsString();
+        String linkImagem = musica.get("artworkUrl100").getAsString();
+        String linkRedirect = musica.has("trackViewUrl") ? musica.get("trackViewUrl").getAsString() : "";
+        long trackId = musica.get("trackId").getAsLong();
+
+        return new Musica(nomeMusica, artistaReal, album, ano, linkPreview, trackId, generoJogo, linkImagem, linkRedirect);
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
+public ArrayList<Musica> buscaMusicasPopularesLastFm(String artista, String generoJogo, int quantidade) throws InterruptedException {
+    ArrayList<Musica> resultado = new ArrayList<>();
+    String corpo = buscaLastFmTopTracks(artista, quantidade);
+    if (corpo == null) 
+        return resultado;
+
+    JsonObject resposta = JsonParser.parseString(corpo).getAsJsonObject();
+    if (!resposta.has("toptracks")) {
+        System.out.println("Last.fm não retornou faixas para: " + artista);
+        return resultado;
+    }
+
+    JsonArray faixas = resposta.getAsJsonObject("toptracks").getAsJsonArray("track");
+    for (JsonElement el : faixas) {
+        String nomeFaixa = el.getAsJsonObject().get("name").getAsString();
+        Musica musica = buscaFaixaExataNoItunes(nomeFaixa, artista, generoJogo);
+        if (musica != null) {
+            resultado.add(musica);
+        }
+        Thread.sleep(3000); // evita bater rate limit da iTunes Search API
+    }
+
+    return resultado;
+}
+
+
+    
+private long buscaDeezerArtistId(String artista) {
+    String url = "https://api.deezer.com/search/artist?q=" + URLEncoder.encode(artista, StandardCharsets.UTF_8) + "&limit=1";
+    try {
+        HttpClient cliente = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+
+        JsonObject resposta = JsonParser.parseString(response.body()).getAsJsonObject();
+        JsonArray dados = resposta.getAsJsonArray("data");
+
+        if (dados.isEmpty()) return -1;
+
+        return dados.get(0).getAsJsonObject().get("id").getAsLong();
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
+        return -1;
+    }
+}
+
+
+private String buscaDeezerTopTracks(long artistId, int limite) {
+    String url = "https://api.deezer.com/artist/" + artistId + "/top?limit=" + limite;
+    try {
+        HttpClient cliente = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    } catch (IOException | InterruptedException e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
+public ArrayList<Musica> buscaMusicasPopularesDeezer(String artista, String generoJogo, int quantidade) throws InterruptedException {
+    ArrayList<Musica> resultado = new ArrayList<>();
+
+    long artistId = buscaDeezerArtistId(artista);
+    if (artistId == -1) {
+        System.out.println("Deezer não encontrou o artista: " + artista);
+        return resultado;
+    }
+
+    String corpo = buscaDeezerTopTracks(artistId, quantidade);
+    if (corpo == null)
+        return resultado;
+
+    JsonObject resposta = JsonParser.parseString(corpo).getAsJsonObject();
+    if (!resposta.has("data")) {
+        System.out.println("Deezer não retornou faixas para: " + artista);
+        return resultado;
+    }
+
+    JsonArray faixas = resposta.getAsJsonArray("data");
+    for (JsonElement el : faixas) {
+        String nomeFaixa = el.getAsJsonObject().get("title").getAsString();
+        Musica musica = buscaFaixaExataNoItunes(nomeFaixa, artista, generoJogo);
+        if (musica != null) {
+            resultado.add(musica);
+        }
+        Thread.sleep(3000); // evita bater rate limit da iTunes Search API
+    }
+
+    return resultado;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -32,12 +32,12 @@ public class ImportaMusicas {
             "Maria Bethânia",
             "Roupa Nova",
             "Zizi Possi",
-            "Tom Jobim",
+            "Antônio Carlos Jobim",
             "Ivan Lins",
             "Elis Regina",
             "Djavan",
             "Tim Maia",
-            "Gozaguinha",
+            "Gonzaguinha",
             "Gilberto Gil",
             "Rita Lee",
             "Marina Lima",
@@ -45,14 +45,18 @@ public class ImportaMusicas {
             "Guilherme Arantes"
         );
 
-        String genero = "MPB";
+        String genero = "Rock";
         int totalGeralSalvo = 0;
+        ArrayList<Musica>musicas = new ArrayList<>();
 
         // 2. Iteração para rodar o processo para cada membro da lista
-        for (String artista : artistasMPB) {
+        for (String artista : artistasRock) {
             System.out.println("\n=== Buscando Top Hits: " + artista + " ===");
-
-            ArrayList<Musica> musicas = servicoBusca.buscaTopMusicasDoArtista(artista, genero, 10); 
+            try{
+                musicas = servicoBusca.buscaMusicasPopularesDeezer(artista, genero, 30);
+            } catch(InterruptedException e){
+                e.printStackTrace();
+            }
             Set<String> nomesSalvos = new HashSet<>();
             int totalSalvosArtista = 0;
 
