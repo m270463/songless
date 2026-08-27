@@ -13,4 +13,8 @@ public class Config {
     public static String getURLDB(){
         return SonglessApplication.dotenv.get("URL_DB");
     }
+
+    public static String getLASTFMAPIKEY(){
+        return SonglessApplication.dotenv.get("LASTFM_API_KEY");
+    }
 }

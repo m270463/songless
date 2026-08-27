@@ -37,7 +37,7 @@ public class MusicaRepositorio {
             }
 
         }catch(SQLException e){
-            System.out.print(e.getMessage());
+            e.printStackTrace();
         };
     
     }
