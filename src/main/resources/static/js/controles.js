@@ -67,8 +67,8 @@ botaoSkip.addEventListener('click', function() {
 });
 
 botaoProximMusica.addEventListener('click', function() {
-    containerFim.style.display = 'none';
     carregarMusica(true);
+    containerFim.style.display = 'none';
 });
 
 player.addEventListener('ended', function() {

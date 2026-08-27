@@ -83,6 +83,7 @@ function finalizarJogo(vitoria) {
         titulo.innerText = 'You Lost!'
         titulo.style.backgroundColor = 'red';
     }
+    botaoSkip.innerHTML = svgPular;
     resetar();
 }
 

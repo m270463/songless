@@ -1,9 +1,10 @@
 package com.matheus.songless;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class ImportaMusicas {
             Map.entry("Queen", 20),
             Map.entry("Guns N' Roses", 20),
             Map.entry("Scorpions", 15),
-            Map.entry("Nirvanna", 10),
+            Map.entry("Nirvana", 10),
             Map.entry("Metallica", 20),
             Map.entry("Pink Floyd", 15),
             Map.entry("Red Hot Chili Peppers", 15),
@@ -50,26 +51,24 @@ public class ImportaMusicas {
             Map.entry("Skid Row", 5),
             Map.entry("Green Day", 10),
             Map.entry("Sepultura", 5),
-            Map.entry("Slipknot", 5),
             Map.entry("Jimi Hendrix", 5),
             Map.entry("Angra", 10),
             Map.entry("Radiohead", 10),
             Map.entry("Elvis Presley", 10),
-            Map.entry("Legião Urbana", 15),
+            Map.entry("Legião Urbana", 10),
             Map.entry("Charlie Brown", 15),
             Map.entry("Engenheiros do Hawaii", 5),
-            Map.entry("O Rappa", 10),
+            Map.entry("O Rappa", 3),
             Map.entry("Skank", 10),
             Map.entry("Capital Inicial", 10),
-            Map.entry("Jota Quest", 15),
+            Map.entry("Jota Quest", 10),
             Map.entry("Raimundos", 5),
             Map.entry("Pitty", 5),
             Map.entry("Paralamas do Sucessos", 5),
-            Map.entry("Los Hermanos", 5),
             Map.entry("Dream Theater", 10),
             Map.entry("Soundgarden", 3),
             Map.entry("Audioslave", 5),
-            Map.entry("Mamonas Assassinas",5),
+            Map.entry("Mamonas Assassinas",3),
             Map.entry("Deep Purple", 5)
         ));
 
@@ -101,31 +100,12 @@ public class ImportaMusicas {
             Map.entry("Novos Baianos", 5),
             Map.entry("Titas",5),
             Map.entry("Lo Borges", 5),
-            Map.entry("Raul Seixas", 10),
+            Map.entry("Raul Seixas", 5),
             Map.entry("Ana Carolina", 15),
             Map.entry("Adriana Calcanhoto", 10)
 
 
         ));
-        List<String> artistasMPB = List.of(
-            "Gal Costa",
-            "Chico Buarque",
-            "Milton Nascimento",
-            "Maria Bethânia",
-            "Roupa Nova",
-            "Zizi Possi",
-            "Antônio Carlos Jobim",
-            "Ivan Lins",
-            "Elis Regina",
-            "Djavan",
-            "Tim Maia",
-            "Gonzaguinha",
-            "Gilberto Gil",
-            "Rita Lee",
-            "Marina Lima",
-            "Lulu Santos",
-            "Guilherme Arantes"
-        );
 
         Map<String, Integer> hashPop = new HashMap<>(Map.ofEntries(
         Map.entry("Whitney Houston", 15),
@@ -140,44 +120,48 @@ public class ImportaMusicas {
         Map.entry("Lady Gaga", 15),
         Map.entry("Harry Styles",10),
         Map.entry("Sabrina Carpenter",5),
-        Map.entry("Billie Elish", 10),
-        Map.entry("Kate Perry", 20),
+        Map.entry("Billie Eilish", 10),
+        Map.entry("Katy Perry", 20),
         Map.entry("Mariah Carey", 10),
         Map.entry("Black Eyed Peas", 7),
         Map.entry("Justin Bieber", 15),
         Map.entry("Sia", 5),
         Map.entry("Britney Spears", 10),
-        Map.entry("Celine Dion", 10),
+        Map.entry("Céline Dion", 10),
         Map.entry("Demi Lovato", 5),
         Map.entry("Backstreet Boys", 5),
-        Map.entry("Pharell Williams" ,3),
+        Map.entry("Pharrell Williams" ,3),
         Map.entry("Miley Cyrus", 10),
         Map.entry("The Weeknd", 15),
         Map.entry("Stevie Wonder", 15),
         Map.entry("Bee Gees", 5),
-        Map.entry("Prince", 5)
+        Map.entry("Prince", 5),
+        Map.entry("Dua Lipa", 5)
         ));
+// Chave: Nome do Gênero (String - Imutável)
+// Valor: Mapa de Artistas (Map<String, Integer>)
+Map<String, Map<String, Integer>> hashGeral = Map.of(
+    "Rock", hashRock,
+    "MPB", hashMpb,
+    "Pop", hashPop
+);
 
 
-    
-
-        
-        
-
-
-        String genero = "Rock";
+        String genero = "";
         int totalGeralSalvo = 0;
         int limite = 0;
         ArrayList<Musica>musicas = new ArrayList<>();
         String artista = "";
-
-        // 2. Iteração para rodar o processo para cada membro da lista
-        for (Map.Entry<String,Integer> entrada: hashPop.entrySet()) {
+    for(Map.Entry<String,Map<String,Integer>> geral: hashGeral.entrySet()){
+        Map<String,Integer> map = geral.getValue();
+        genero = geral.getKey();
+        for (Map.Entry<String,Integer> entrada: map.entrySet()) {
             artista = entrada.getKey();
             limite = entrada.getValue();
             System.out.println("\n=== Buscando Top Hits: " + artista + " ===");
             try{
                 musicas = servicoBusca.buscaMusicasPopularesLastFm(artista, genero, limite);
+                musicas.addAll(servicoBusca.buscaMusicasPopularesDeezer(artista, genero, limite));
             } catch(InterruptedException e){
                 e.printStackTrace();
             }
@@ -227,6 +211,8 @@ public class ImportaMusicas {
         System.out.println("TOTAL GERAL DE MÚSICAS SALVAS: " + totalGeralSalvo);
         System.out.println("==========================================");
     }
+}
+
 
     private static boolean ehVersaoIndesejada(String nome) {
         String nomeLower = nome.toLowerCase();
