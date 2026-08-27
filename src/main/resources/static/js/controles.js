@@ -68,6 +68,7 @@ botaoSkip.addEventListener('click', function() {
 
 botaoProximMusica.addEventListener('click', function() {
     carregarMusica(true);
+    botaoSkip.innerHTML = svgPular;
     containerFim.style.display = 'none';
 });
 
