@@ -1,16 +1,23 @@
 package com.matheus.songless;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.sql.DataSource;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class BuscaAutoComplete {
+
+    private final DataSource dataSource;
+
+    public BuscaAutoComplete(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public ArrayList<String> buscaComplete(String termo){
         ArrayList<String> resultados = new ArrayList<>();
@@ -19,7 +26,7 @@ public class BuscaAutoComplete {
 
         String sql = "SELECT nome, artista FROM musicasApple WHERE nome ILIKE ? OR artista ILIKE ? LIMIT 30";
 
-        try (Connection conexao = DriverManager.getConnection(Config.getURLDB(), Config.getUSERDB(), Config.getSENHADB());
+        try (Connection conexao = dataSource.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
             String termoBusca = "%" + termo + "%";
@@ -37,5 +44,4 @@ public class BuscaAutoComplete {
 
         return resultados;
     }
-} 
-
+}

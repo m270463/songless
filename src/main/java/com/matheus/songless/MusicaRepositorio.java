@@ -7,6 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,15 +19,24 @@ public class MusicaRepositorio {
     private final String password = Config.getSENHADB();
 
     private Connection conexao;
+    private final DataSource dataSource;
 
-    // Abre a conexão uma única vez ao criar o repositório
+    // Construtor usado pelo ImportaMusicas (script local, fora do Spring).
+    // Abre uma única conexão via DriverManager, como antes.
     public MusicaRepositorio() {
+        this.dataSource = null;
         try {
-
             this.conexao = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao conectar no banco Railway", e);
         }
+    }
+
+    // Construtor usado pelo Spring em produção: recebe o DataSource/HikariCP
+    // gerenciado pelo container, sem abrir conexão nenhuma aqui.
+    @Autowired
+    public MusicaRepositorio(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
 
@@ -77,7 +89,7 @@ public class MusicaRepositorio {
             sql = "SELECT * FROM musicasApple WHERE genero = 'Pop' ORDER BY RANDOM() LIMIT 1";
         }
         
-        try (Connection conexao = DriverManager.getConnection(url,user,password);
+        try (Connection conexao = dataSource.getConnection();
             Statement stmt = conexao.createStatement()){
                 try (ResultSet rs = stmt.executeQuery(sql)){
                     while (rs.next()) {
