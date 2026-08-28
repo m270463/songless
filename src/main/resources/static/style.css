@@ -95,7 +95,23 @@ h1{
     overflow-y: auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     z-index: 10;
+}
 
+.listaSugestoesArtista{
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 8px;
+    list-style: none;
+    background-color: #232323;
+    border-radius: 8px;
+    padding: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 10;
 }
 
 .elementoSugestao{
@@ -336,4 +352,49 @@ h1{
 
 .botaoOpcao.ativo{
     border-color: #fff;
+}
+
+.botaoOpcao.inativo{
+    background-color: transparent;
+    color: transparent;
+}
+
+.campoArtista{
+    display: none;
+}
+
+.wrapper-modo{
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+}
+
+.botaoModo{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #232323;
+    color: #ffffff;
+    border: 1px solid #333;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-text-fill-color: #fff;
+    margin-right: 5px;
+}
+
+.campoArtista.active{
+    display: flex;
+    height: 44px;
+    flex: 4;
+    padding: 0 16px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 14px;
 }

@@ -11,17 +11,37 @@ campoResposta.addEventListener('input', function() {
     }
 
     timeoutId = setTimeout(function() {
-        buscarSugestoes(termo);
+        buscarSugestoes(termo,'Resposta');
     }, 250);
 });
 
-async function buscarSugestoes(termo) {
-    const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}`);
+campoArtista.addEventListener('input', function() {
+    clearTimeout(timeoutId);
+    const termo = campoArtista.value;
+    if (termo.length < 2) {
+        listaSugestoesArtistas.innerHTML = '';
+        return;
+    }
+
+    timeoutId = setTimeout(function() {
+        buscarSugestoes(termo,'Artista');
+    }, 250);
+});
+
+
+
+async function buscarSugestoes(termo,campo) {
+    const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}&campo=${campo}&modo=${modoAtual}`);
     const sugestoes = await resp.json();
-    exibirSugestoes(sugestoes);
+    if (campo == 'Resposta'){
+        exibirSugestoes(sugestoes,listaSugestoes);
+    }
+    else{
+        exibirSugestoes(sugestoes,listaSugestoesArtistas);
+    }
 }
 
-function exibirSugestoes(sugestoes) {
+function exibirSugestoes(sugestoes,listaSugestoes) {
     listaSugestoes.innerHTML = '';
     sugestoes.forEach(texto => {
         const elemento = document.createElement('li');
@@ -34,10 +54,16 @@ function exibirSugestoes(sugestoes) {
     })
 }
 
-function selecionar(texto) {
+function selecionar(texto,campo) {
+    if (campo == 'Resposta'){
     campoResposta.value = texto;
     gerenciarChute();
     listaSugestoes.innerHTML = '';
+    }
+    else{
+        campoArtista.value = texto;
+        listaSugestoesArtistas.innerHTML = '';
+    }
 }
 
 campoResposta.addEventListener('keydown', (e) => {
@@ -53,5 +79,6 @@ campoResposta.addEventListener('keydown', (e) => {
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.autocomplete-wrapper')) {
         listaSugestoes.innerHTML = '';
+        listaSugestoesArtistas.innerHTML = '';
     }
 });

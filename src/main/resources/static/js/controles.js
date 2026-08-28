@@ -124,3 +124,33 @@ function corrigeOpcoes(){
         }
     });
 }
+
+
+
+botaoModo.addEventListener('click',function(){
+    if (modoAtual == 'Normal'){
+        modoAtual = 'Artista';
+        botaoModo.innerText = 'Modo Normal';
+        campoArtista.classList.add('active');
+    }
+    else if (modoAtual == 'Artista'){
+        modoAtual = 'Normal';
+        botaoModo.innerText = 'Modo Artista';
+        
+        campoArtista.classList.remove('active');
+    }
+    trocaModo()
+})
+
+
+function trocaModo(){
+    const botoes = opcoesJogo.querySelectorAll('.botaoOpcao');
+    botoes.forEach(opcao => {
+        if (modoAtual == 'Artista'){
+            opcao.style.display = 'none';
+        }
+        else{
+            opcao.style.display = 'inline-block';
+        }
+    });
+}
