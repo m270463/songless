@@ -49,7 +49,7 @@ public class MusicaRepositorio {
 
 
     public void salvarMusica(Musica musica){
-        String sql = "INSERT INTO musicasApple (nome, artista, album, anoLancamento, linkAudio, genero, appleId, linkImagem, linkRedirecionamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO musicasArtista (nome, artista, album, anoLancamento, linkAudio, genero, appleId, linkImagem, linkRedirecionamento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
                 stmt.setString(1, musica.getNome());
                 stmt.setString(2, musica.getArtista());
@@ -74,47 +74,48 @@ public class MusicaRepositorio {
     
     }
 
-    public Musica escolherAleatoria(String opcao){
-        String sql = "";
-        if (opcao.equals("Todos"))
-            sql = "SELECT * FROM musicasApple ORDER BY RANDOM() LIMIT 1";
-        if (opcao.equals("Rock")){
-            sql = "SELECT * FROM musicasApple WHERE genero = 'Rock' ORDER BY RANDOM() LIMIT 1";
-        }
-        if (opcao.equals("MPB")){
-             sql = "SELECT * FROM musicasApple WHERE genero = 'MPB' ORDER BY RANDOM() LIMIT 1";
+public Musica escolherAleatoria(String opcao, String artista) {
+    boolean temArtista = artista != null && !artista.isBlank() && !artista.equalsIgnoreCase("null");
+
+    String sql;
+    if (temArtista) {
+        sql = "SELECT * FROM musicasApple WHERE artista = ? ORDER BY RANDOM() LIMIT 1";
+    } else if (opcao.equals("Rock") || opcao.equals("MPB") || opcao.equals("Pop")) {
+        sql = "SELECT * FROM musicasApple WHERE genero = ? ORDER BY RANDOM() LIMIT 1";
+    } else {
+        sql = "SELECT * FROM musicasApple ORDER BY RANDOM() LIMIT 1";
+    }
+
+    try (Connection conexao = dataSource.getConnection();
+         PreparedStatement stmt = conexao.prepareStatement(sql)) {
+
+        if (temArtista) {
+            stmt.setString(1, artista);
+        } else if (opcao.equals("Rock") || opcao.equals("MPB") || opcao.equals("Pop")) {
+            stmt.setString(1, opcao);
         }
 
-        if (opcao.equals("Pop")){
-            sql = "SELECT * FROM musicasApple WHERE genero = 'Pop' ORDER BY RANDOM() LIMIT 1";
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                Musica musica = new Musica(rs.getString("nome"),
+                                rs.getString("artista"),
+                                rs.getString("album"),
+                                rs.getInt("anoLancamento"),
+                                rs.getString("linkAudio"),
+                                rs.getLong("appleId"),
+                                rs.getString("genero"),
+                                rs.getString("linkImagem"),
+                                rs.getString("linkRedirecionamento"));
+                musica.setId(rs.getInt("id"));
+                musica.setUltimaAtualizacao(rs.getTimestamp("ultimaAtualizacao").toLocalDateTime());
+                return musica;
+            }
         }
-        
-        try (Connection conexao = dataSource.getConnection();
-            Statement stmt = conexao.createStatement()){
-                try (ResultSet rs = stmt.executeQuery(sql)){
-                    while (rs.next()) {
-                        Musica musica = new Musica(rs.getString("nome"),
-                                        rs.getString("artista"),
-                                        rs.getString("album"),
-                                        rs.getInt("anoLancamento"),
-                                        rs.getString("linkAudio"),
-                                        rs.getLong("appleId"),
-                                        rs.getString("genero"),
-                                        rs.getString("linkImagem"),
-                                        rs.getString("linkRedirecionamento"));
-                        musica.setId(rs.getInt("id"));
-                        musica.setUltimaAtualizacao(rs.getTimestamp("ultimaAtualizacao").toLocalDateTime());
-                        return musica;
-                    }
 
-                }
+    } catch (SQLException e) {
+        System.err.println(e.getMessage());
+    }
 
-
-        }catch(SQLException e){
-            System.err.println(e.getMessage());
-        }
-        
-        
-        return null;
-    }   
+    return null;
+}
 }

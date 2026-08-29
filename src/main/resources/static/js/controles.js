@@ -123,6 +123,7 @@ function corrigeOpcoes(){
             opcao.disabled = false;
         }
     });
+
 }
 
 
@@ -131,19 +132,22 @@ botaoModo.addEventListener('click',function(){
     if (modoAtual == 'Normal'){
         modoAtual = 'Artista';
         botaoModo.innerText = 'Modo Normal';
+        botaoConfirmar.classList.add('active');
         campoArtista.classList.add('active');
     }
     else if (modoAtual == 'Artista'){
         modoAtual = 'Normal';
         botaoModo.innerText = 'Modo Artista';
-        
+        botaoConfirmar.classList.remove('active');
         campoArtista.classList.remove('active');
     }
     trocaModo()
 })
 
 
+
 function trocaModo(){
+    atualizarProgressoBarra(0);
     const botoes = opcoesJogo.querySelectorAll('.botaoOpcao');
     botoes.forEach(opcao => {
         if (modoAtual == 'Artista'){
@@ -153,4 +157,53 @@ function trocaModo(){
             opcao.style.display = 'inline-block';
         }
     });
+    if (modoAtual == 'Normal'){
+        artistaAtual = null;
+        botaoChute.disabled = false;
+        botaoRestart.disabled = false;
+        botaoTocar.disabled = false;
+        botaoSkip.disabled = false;
+        campoResposta.disabled = false;
+        carregarMusica(false);
+    }
+
+    else{
+        botaoChute.disabled = true;
+        botaoRestart.disabled = true;
+        botaoTocar.disabled = true;
+        botaoSkip.disabled = true;
+        campoResposta.disabled = true;
+        campoArtista.value = '';
+    }
+}
+
+botaoConfirmar.addEventListener('click', async function(){
+    const artistaValido = await validaArtista(campoArtista.value);
+
+    if (artistaValido){
+        textoConfirmar.innerText = 'Artista encontrado';
+        textoConfirmar.classList.add('correto');
+        artistaAtual = campoArtista.value;
+        carregarMusica(true);
+        botaoChute.disabled = false;
+        botaoRestart.disabled = false;
+        botaoTocar.disabled = false;
+        botaoSkip.disabled = false;
+        campoResposta.disabled = false;
+    }
+    else{
+        textoConfirmar.innerText = 'Artista não encontrado';
+        textoConfirmar.classList.add('errado');
+    }
+
+    temporizador = setTimeout(function() {
+        clearTimeout(temporizador);
+        textoConfirmar.classList.remove('correto','errado');
+    },1000);
+});
+
+async function validaArtista(termo){
+    const resp = await fetch(`/api/artista?artista=${encodeURIComponent(termo)}`);
+    const resultado = await resp.json();
+    return resultado ===  true;
 }

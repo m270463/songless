@@ -29,6 +29,11 @@ function gerenciarChute() {
 }
 
 function avancarNivel() {
+    if (modoAtual == 'Artista'){
+        campoArtista.disabled = true;
+        botaoConfirmar.disabled = true;
+    }
+    botaoModo.disabled = true;
     if (indiceAtual < tempos.length - 1) {
         indiceAtual++;
         atualizarMarcador();
@@ -96,7 +101,9 @@ function resetar() {
     botaoChute.disabled = false;
     botaoSkip.disabled = false;
     campoResposta.disabled = false;
-
+    botaoConfirmar.disabled = false;
+    campoArtista.disabled = false;
+    botaoModo.disabled = false;
     // Reseta as linhas do histórico
     for (let i = 0; i < historico.children.length; i++) {
         const linha = historico.children[i];

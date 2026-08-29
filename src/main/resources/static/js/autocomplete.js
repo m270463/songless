@@ -34,20 +34,20 @@ async function buscarSugestoes(termo,campo) {
     const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}&campo=${campo}&modo=${modoAtual}`);
     const sugestoes = await resp.json();
     if (campo == 'Resposta'){
-        exibirSugestoes(sugestoes,listaSugestoes);
+        exibirSugestoes(sugestoes,listaSugestoes,campo);
     }
     else{
-        exibirSugestoes(sugestoes,listaSugestoesArtistas);
+        exibirSugestoes(sugestoes,listaSugestoesArtistas,campo);
     }
 }
 
-function exibirSugestoes(sugestoes,listaSugestoes) {
+function exibirSugestoes(sugestoes,listaSugestoes,campo) {
     listaSugestoes.innerHTML = '';
     sugestoes.forEach(texto => {
         const elemento = document.createElement('li');
         elemento.textContent = texto;
         elemento.addEventListener('click', function() {
-            selecionar(texto);
+            selecionar(texto,campo);
         });
         elemento.classList.add('elementoSugestao');
         listaSugestoes.appendChild(elemento);
@@ -56,13 +56,14 @@ function exibirSugestoes(sugestoes,listaSugestoes) {
 
 function selecionar(texto,campo) {
     if (campo == 'Resposta'){
-    campoResposta.value = texto;
-    gerenciarChute();
-    listaSugestoes.innerHTML = '';
+        campoResposta.value = texto;
+        gerenciarChute();
+        listaSugestoes.innerHTML = '';
     }
     else{
         campoArtista.value = texto;
         listaSugestoesArtistas.innerHTML = '';
+        artistaAtual = texto;
     }
 }
 
@@ -72,7 +73,7 @@ campoResposta.addEventListener('keydown', (e) => {
 
     if (e.key === 'Enter' && indiceAtivo >= 0) {
         e.preventDefault();
-        selecionar(itens[indiceAtivo].textContent);
+        selecionar(itens[indiceAtivo].textContent,'Resposta');
     }
 });
 

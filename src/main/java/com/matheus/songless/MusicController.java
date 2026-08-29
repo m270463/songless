@@ -15,7 +15,7 @@ public class MusicController {
     
 
     @GetMapping("/api/musica")
-    public Musica sortear(@RequestParam String opcao){
-        return repositorio.escolherAleatoria(opcao);
+    public Musica sortear(@RequestParam String opcao,@RequestParam String artista){
+        return repositorio.escolherAleatoria(opcao,artista);
     }
 }
