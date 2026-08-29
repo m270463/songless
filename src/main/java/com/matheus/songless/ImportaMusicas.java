@@ -41,7 +41,7 @@ public class ImportaMusicas {
             Map.entry("Ozzy Osbourne", 20),
             Map.entry("Black Sabbath", 10),
             Map.entry("Dio", 5),
-            Map.entry("Europe", 3),
+            // Map.entry("Europe", 3),
             Map.entry("Boston", 3),
             Map.entry("The Police", 3),
             Map.entry("The Goo Goo Dolls", 3),
@@ -139,9 +139,9 @@ public class ImportaMusicas {
 // Chave: Nome do Gênero (String - Imutável)
 // Valor: Mapa de Artistas (Map<String, Integer>)
 Map<String, Map<String, Integer>> hashGeral = Map.of(
-    "Rock", hashRock,
+    "Rock", hashRock
     // "MPB", hashMpb,
-    "Pop", hashPop
+    // "Pop", hashPop
 );
 
 
