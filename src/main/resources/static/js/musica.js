@@ -8,10 +8,10 @@ function carregarMusica(fim) {
     botaoRestart.disabled = true;
     botaoSkip.disabled = true;
     if (musicas[indiceMusicaAtual] == null || fim){
-        fetch(`/api/musica?opcao=${opcaoAtual}`)
+        fetch(`/api/musica?opcao=${opcaoAtual}&artista=${artistaAtual}`)
             .then(resposta => resposta.json())
             .then(musica => {
-                        if (!musica) {
+            if (!musica) {
                 alert('Nenhuma música encontrada para essa opção.');
                 botaoTocar.disabled = false;
                 botaoRestart.disabled = false;
@@ -20,8 +20,9 @@ function carregarMusica(fim) {
             }
 
 
-
-            musicas[indiceMusicaAtual] = musica;
+            if (modoAtual == 'Normal'){
+                musicas[indiceMusicaAtual] = musica;
+            }
             musicaAtual = musica;
                 botaoTocar.disabled = false;
                 botaoRestart.disabled = false;

@@ -7,6 +7,12 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <div class = "wrapper-modo">
+            <button id = "botaoModo" class = "botaoModo">Modo Artista</button>
+        </div>
+
+
+
 
         <main class = "cardPrincipal">
             <h1>Songless Unlimited</h1>
@@ -16,15 +22,25 @@
                 <button id = "botaoMPB" class = "botaoOpcao">MPB</button>
                 <button id = "botaoRock" class = "botaoOpcao">Rock</button>
                 <button id = "botaoPop" class = "botaoOpcao">Pop</button>
-            </div>
 
+                 <div class="autocomplete-wrapper">
+                     <input type = "text" id = "campoArtista" class = "campoArtista" placeholder="Digite o nome do artista" autocomplete="off">
+                     <button id = "botaoConfirmar" class = "botaoConfirmar">Confirmar</button>
+                     <ul id="sugestoesArtistas" class="listaSugestoesArtista"></ul>
+                </div>   
+            </div>
+            
+            <div id = "wrapperConfirmação">
+                <text id = "textoConfirmação" class = "textoConfirmação">Teste</text>
+            </div>    
+            
             <div id="historico" class="lista-historico">
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
             <div class="linha-historico"></div>
-            <div class="linha-historico"></div>
+            <div class="linha-historico"></div> 
         </div>
     
         

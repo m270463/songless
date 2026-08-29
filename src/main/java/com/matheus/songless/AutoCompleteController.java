@@ -15,7 +15,10 @@ public class AutoCompleteController {
     }
 
     @GetMapping("/api/autocomplete")   
-    public ArrayList<String> autocomplete(@RequestParam String termo) {
-        return buscaAutoComplete.buscaComplete(termo);
+    public ArrayList<String> autocomplete(@RequestParam String termo, @RequestParam String campo,@RequestParam String modo) {
+        if (campo.equals("Resposta"))
+            return buscaAutoComplete.buscaCompleteMusica(termo,modo);
+        else
+            return buscaAutoComplete.buscaCompleteArtista(termo);
     }
 }

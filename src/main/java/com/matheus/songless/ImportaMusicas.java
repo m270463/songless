@@ -15,59 +15,59 @@ public class ImportaMusicas {
 
 
         Map<String, Integer> hashRock = new HashMap<>(Map.ofEntries(
-            // Map.entry("Queen", 20),
-            // Map.entry("Guns N' Roses", 20),
-            // Map.entry("Scorpions", 15),
-            // Map.entry("Nirvana", 10),
+            Map.entry("Queen", 20),
+            Map.entry("Guns N' Roses", 20),
+            Map.entry("Scorpions", 15),
+            Map.entry("Nirvana", 10),
             Map.entry("Metallica", 20),
-            // Map.entry("Pink Floyd", 15),
-            // Map.entry("Red Hot Chili Peppers", 15),
+            Map.entry("Pink Floyd", 15),
+            Map.entry("Red Hot Chili Peppers", 15),
             Map.entry("Foo Fighters", 5),
             Map.entry("Iron Maiden", 10),
-            // Map.entry("Creed", 5),
+            Map.entry("Creed", 5),
             Map.entry("Aerosmith", 10),
-            // Map.entry("AC/DC", 20),
-            // Map.entry("Megadeth", 10),
+            Map.entry("AC/DC", 20),
+            Map.entry("Megadeth", 10),
             Map.entry("Led Zepellin", 10),
             Map.entry("Pearl Jam", 10),
             Map.entry("Alice in Chains", 10),
             Map.entry("Rolling Stones", 10),
-            // Map.entry("Dire Straits", 5),
+            Map.entry("Dire Straits", 5),
             Map.entry("The Beatles", 20),
             Map.entry("Evanescence", 5),
             Map.entry("Paramore", 5),
-            // Map.entry("Linkin Park", 15),
-            // Map.entry("Bon Jovi", 15),
-            // Map.entry("Ozzy Osbourne", 20),
-            // Map.entry("Black Sabbath", 10),
-            // Map.entry("Dio", 5),
-            // Map.entry("Europe", 3),
-            // Map.entry("Boston", 3),
+            Map.entry("Linkin Park", 15),
+            Map.entry("Bon Jovi", 15),
+            Map.entry("Ozzy Osbourne", 20),
+            Map.entry("Black Sabbath", 10),
+            Map.entry("Dio", 5),
+            Map.entry("Europe", 3),
+            Map.entry("Boston", 3),
             Map.entry("The Police", 3),
-            // Map.entry("The Goo Goo Dolls", 3),
-            // Map.entry("Oasis", 15),
+            Map.entry("The Goo Goo Dolls", 3),
+            Map.entry("Oasis", 15),
             Map.entry("Skid Row", 5),
             Map.entry("Green Day", 10),
-            // Map.entry("Sepultura", 5),
-            // Map.entry("Jimi Hendrix", 5),
-            // Map.entry("Angra", 10),
+            Map.entry("Sepultura", 5),
+            Map.entry("Jimi Hendrix", 5),
+            Map.entry("Angra", 10),
             Map.entry("Radiohead", 10),
-            // Map.entry("Elvis Presley", 10),
+            Map.entry("Elvis Presley", 10),
             Map.entry("Legião Urbana", 10),
             Map.entry("Charlie Brown Jr", 15),
-            // Map.entry("Engenheiros do Hawaii", 5),
+            Map.entry("Engenheiros do Hawaii", 5),
             Map.entry("O Rappa", 3),
-            // Map.entry("Skank", 10),
-            // Map.entry("Capital Inicial", 10),
-            // Map.entry("Jota Quest", 10),
+            Map.entry("Skank", 10),
+            Map.entry("Capital Inicial", 10),
+            Map.entry("Jota Quest", 10),
             Map.entry("Raimundos", 5),
-            // Map.entry("Pitty", 5),
+            Map.entry("Pitty", 5),
             Map.entry("Paralamas do Sucesso", 5),
-            // Map.entry("Dream Theater", 10),
+            Map.entry("Dream Theater", 10),
             Map.entry("Soundgarden", 3),
-            Map.entry("Audioslave", 5)
-            // Map.entry("Mamonas Assassinas",3),
-            // Map.entry("Deep Purple", 5)
+            Map.entry("Audioslave", 5),
+            Map.entry("Mamonas Assassinas",3),
+            Map.entry("Deep Purple", 5)
         ));
 
 
@@ -106,48 +106,48 @@ public class ImportaMusicas {
         ));
 
         Map<String, Integer> hashPop = new HashMap<>(Map.ofEntries(
-        // Map.entry("Whitney Houston", 15),
-        // Map.entry("Ed Sheeran", 15),
-        // Map.entry("Bruno Mars", 25),
-        // Map.entry("Michael Jackson", 35),
-        // Map.entry("Rihanna" , 15),
-        // Map.entry("Coldplay", 15),
-        // Map.entry("Taylor Swift", 10),
-        // Map.entry("Beyonce", 15),
-        // Map.entry("Adele", 15),
-        // Map.entry("Lady Gaga", 15),
-        // Map.entry("Harry Styles",10),
-        // Map.entry("Sabrina Carpenter",5),
-        // Map.entry("Billie Eilish", 10),
-        // Map.entry("Katy Perry", 20),
-        // Map.entry("Mariah Carey", 10),
-        // Map.entry("Black Eyed Peas", 7),
-        // Map.entry("Justin Bieber", 15),
-        // Map.entry("Sia", 5),
-        // Map.entry("Britney Spears", 10),
-        // Map.entry("Céline Dion", 10),
-        // Map.entry("Demi Lovato", 5),
-        // Map.entry("Backstreet Boys", 5),
-        // Map.entry("Pharrell Williams" ,3),
-        // Map.entry("Miley Cyrus", 10),
-        // Map.entry("The Weeknd", 15),
-        // Map.entry("Stevie Wonder", 15),
-        // Map.entry("Bee Gees", 5),
-        // Map.entry("Prince", 5),
-        // Map.entry("Dua Lipa", 5)
+        Map.entry("Whitney Houston", 15),
+        Map.entry("Ed Sheeran", 15),
+        Map.entry("Bruno Mars", 25),
+        Map.entry("Michael Jackson", 35),
+        Map.entry("Rihanna" , 15),
+        Map.entry("Coldplay", 15),
+        Map.entry("Taylor Swift", 10),
+        Map.entry("Beyonce", 15),
+        Map.entry("Adele", 15),
+        Map.entry("Lady Gaga", 15),
+        Map.entry("Harry Styles",10),
+        Map.entry("Sabrina Carpenter",5),
+        Map.entry("Billie Eilish", 10),
+        Map.entry("Katy Perry", 20),
+        Map.entry("Mariah Carey", 10),
+        Map.entry("Black Eyed Peas", 7),
+        Map.entry("Justin Bieber", 15),
+        Map.entry("Sia", 5),
+        Map.entry("Britney Spears", 10),
+        Map.entry("Céline Dion", 10),
+        Map.entry("Demi Lovato", 5),
+        Map.entry("Backstreet Boys", 5),
+        Map.entry("Pharrell Williams" ,3),
+        Map.entry("Miley Cyrus", 10),
+        Map.entry("The Weeknd", 15),
+        Map.entry("Stevie Wonder", 15),
+        Map.entry("Bee Gees", 5),
+        Map.entry("Prince", 5),
+        Map.entry("Dua Lipa", 5)
         ));
 // Chave: Nome do Gênero (String - Imutável)
 // Valor: Mapa de Artistas (Map<String, Integer>)
 Map<String, Map<String, Integer>> hashGeral = Map.of(
     "Rock", hashRock,
-    "MPB", hashMpb,
+    // "MPB", hashMpb,
     "Pop", hashPop
 );
 
 
         String genero = "";
         int totalGeralSalvo = 0;
-        int limite = 0;
+        int limite = 100;
         ArrayList<Musica>musicas = new ArrayList<>();
         String artista = "";
     for(Map.Entry<String,Map<String,Integer>> geral: hashGeral.entrySet()){
@@ -155,14 +155,9 @@ Map<String, Map<String, Integer>> hashGeral = Map.of(
         genero = geral.getKey();
         for (Map.Entry<String,Integer> entrada: map.entrySet()) {
             artista = entrada.getKey();
-            limite = entrada.getValue();
+            
             System.out.println("\n=== Buscando Top Hits: " + artista + " ===");
-            try{
-                musicas = servicoBusca.buscaMusicasPopularesLastFm(artista, genero, limite);
-                musicas.addAll(servicoBusca.buscaMusicasPopularesDeezer(artista, genero, limite));
-            } catch(InterruptedException e){
-                e.printStackTrace();
-            }
+            musicas = servicoBusca.buscaTopMusicasDoArtista(artista, genero, limite);
             Set<String> nomesSalvos = new HashSet<>();
             int totalSalvosArtista = 0;
 
@@ -173,11 +168,11 @@ Map<String, Map<String, Integer>> hashGeral = Map.of(
 
                 String nomeOriginal = m.getNome(); 
 
-                // // Ignora versões ao vivo, remasters e remixes
-                // if (ehVersaoIndesejada(nomeOriginal)) {
-                //     System.out.println("Ignorado (versão alternativa): " + nomeOriginal);
-                //     continue;
-                // }
+                // Ignora versões ao vivo, remasters e remixes
+                if (ehVersaoIndesejada(nomeOriginal)) {
+                    System.out.println("Ignorado (versão alternativa): " + nomeOriginal);
+                    continue;
+                }
 
                 // Normaliza o nome (remove sufixos e parênteses) para comparação
                 String nomeBase = normalizarNome(nomeOriginal);

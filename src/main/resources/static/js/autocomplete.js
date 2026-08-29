@@ -11,33 +11,60 @@ campoResposta.addEventListener('input', function() {
     }
 
     timeoutId = setTimeout(function() {
-        buscarSugestoes(termo);
+        buscarSugestoes(termo,'Resposta');
     }, 250);
 });
 
-async function buscarSugestoes(termo) {
-    const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}`);
+campoArtista.addEventListener('input', function() {
+    clearTimeout(timeoutId);
+    const termo = campoArtista.value;
+    if (termo.length < 2) {
+        listaSugestoesArtistas.innerHTML = '';
+        return;
+    }
+
+    timeoutId = setTimeout(function() {
+        buscarSugestoes(termo,'Artista');
+    }, 250);
+});
+
+
+
+async function buscarSugestoes(termo,campo) {
+    const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}&campo=${campo}&modo=${modoAtual}`);
     const sugestoes = await resp.json();
-    exibirSugestoes(sugestoes);
+    if (campo == 'Resposta'){
+        exibirSugestoes(sugestoes,listaSugestoes,campo);
+    }
+    else{
+        exibirSugestoes(sugestoes,listaSugestoesArtistas,campo);
+    }
 }
 
-function exibirSugestoes(sugestoes) {
+function exibirSugestoes(sugestoes,listaSugestoes,campo) {
     listaSugestoes.innerHTML = '';
     sugestoes.forEach(texto => {
         const elemento = document.createElement('li');
         elemento.textContent = texto;
         elemento.addEventListener('click', function() {
-            selecionar(texto);
+            selecionar(texto,campo);
         });
         elemento.classList.add('elementoSugestao');
         listaSugestoes.appendChild(elemento);
     })
 }
 
-function selecionar(texto) {
-    campoResposta.value = texto;
-    gerenciarChute();
-    listaSugestoes.innerHTML = '';
+function selecionar(texto,campo) {
+    if (campo == 'Resposta'){
+        campoResposta.value = texto;
+        gerenciarChute();
+        listaSugestoes.innerHTML = '';
+    }
+    else{
+        campoArtista.value = texto;
+        listaSugestoesArtistas.innerHTML = '';
+        artistaAtual = texto;
+    }
 }
 
 campoResposta.addEventListener('keydown', (e) => {
@@ -46,12 +73,13 @@ campoResposta.addEventListener('keydown', (e) => {
 
     if (e.key === 'Enter' && indiceAtivo >= 0) {
         e.preventDefault();
-        selecionar(itens[indiceAtivo].textContent);
+        selecionar(itens[indiceAtivo].textContent,'Resposta');
     }
 });
 
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.autocomplete-wrapper')) {
         listaSugestoes.innerHTML = '';
+        listaSugestoesArtistas.innerHTML = '';
     }
 });
