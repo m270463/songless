@@ -28,7 +28,7 @@ public class BuscaAutoComplete {
         if (modo.equals("Normal"))
             sql = "SELECT nome, artista FROM musicasApple WHERE nome ILIKE ? OR artista ILIKE ? LIMIT 30";
         else
-            sql = "SELECT nome, artista FROM musicasApple WHERE nome ILIKE ? LIMIT 10";
+            sql = "SELECT nome, artista FROM musicasArtista WHERE nome ILIKE ? LIMIT 10";
 
         try (Connection conexao = dataSource.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {

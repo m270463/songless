@@ -89,19 +89,19 @@ public class ImportaMusicas {
             Map.entry("Marina Lima", 10),
             Map.entry("Lulu Santos", 20),
             Map.entry("Guilherme Arantes", 15),
-            Map.entry("Secos e Molhados", 5),
+            Map.entry("Secos&Molhados", 5),
             Map.entry("Cartola", 10),
             Map.entry("Marisa Monte", 15),
             Map.entry("Nando Reis", 10),
             Map.entry("Jorge Vercillo", 15),
             Map.entry("Emilio Santiago", 5),
             Map.entry("Novos Baianos", 5),
-            Map.entry("Titas",5),
+            Map.entry("Titãs",5),
             Map.entry("Lo Borges", 5),
             Map.entry("Raul Seixas", 5),
             Map.entry("Ana Carolina", 15),
-            Map.entry("Adriana Calcanhoto", 10)
-
+            Map.entry("Adriana Calcanhotto", 10),
+            Map.entry("Caetano Veloso", 15)
 
         ));
 
@@ -139,8 +139,8 @@ public class ImportaMusicas {
 // Chave: Nome do Gênero (String - Imutável)
 // Valor: Mapa de Artistas (Map<String, Integer>)
 Map<String, Map<String, Integer>> hashGeral = Map.of(
-    "Rock", hashRock
-    // "MPB", hashMpb,
+    // "Rock", hashRock
+    "MPB", hashMpb
     // "Pop", hashPop
 );
 
