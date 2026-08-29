@@ -55,7 +55,7 @@ public class BuscaAutoComplete {
         if (termo.length() < 2)
             return resultados;
 
-        String sql = "SELECT DISTINCT artista FROM musicasApple WHERE artista ILIKE ? LIMIT 30";
+        String sql = "SELECT DISTINCT artista FROM musicasArtista WHERE artista ILIKE ? LIMIT 30";
 
         try (Connection conexao = dataSource.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {
