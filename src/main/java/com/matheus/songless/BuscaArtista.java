@@ -19,7 +19,7 @@ public class BuscaArtista {
     }
 
     public boolean validaArtista(String termo){
-        String sql = "SELECT artista FROM musicasapple WHERE artista = ?";
+        String sql = "SELECT artista FROM musicasArtista WHERE artista = ?";
         try (Connection conexao = dataSource.getConnection();
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, termo);

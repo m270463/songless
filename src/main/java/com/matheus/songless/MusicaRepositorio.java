@@ -79,7 +79,7 @@ public Musica escolherAleatoria(String opcao, String artista) {
 
     String sql;
     if (temArtista) {
-        sql = "SELECT * FROM musicasApple WHERE artista = ? ORDER BY RANDOM() LIMIT 1";
+        sql = "SELECT * FROM musicasArtista WHERE artista = ? ORDER BY RANDOM() LIMIT 1";
     } else if (opcao.equals("Rock") || opcao.equals("MPB") || opcao.equals("Pop")) {
         sql = "SELECT * FROM musicasApple WHERE genero = ? ORDER BY RANDOM() LIMIT 1";
     } else {
