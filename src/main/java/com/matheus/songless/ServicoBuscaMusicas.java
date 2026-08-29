@@ -126,16 +126,15 @@ public class ServicoBuscaMusicas {
 
 
 
-    public ArrayList<Musica> buscaTopMusicasDoArtista(String nomeArtista, String generoJogo, int limiteHits) {
+public ArrayList<Musica> buscaTopMusicasDoArtista(String nomeArtista, String generoJogo, int limiteHits) {
     ArrayList<Musica> topHits = new ArrayList<>();
-    
     try {
         HttpClient cliente = HttpClient.newHttpClient();
 
-        // Passos 1: Descobrir o ID do Artista no iTunes
+        // Passo 1: Descobrir o ID do Artista no catálogo BR do iTunes
         String urlBuscaArtista = "https://itunes.apple.com/search?term=" 
                 + URLEncoder.encode(nomeArtista, StandardCharsets.UTF_8) 
-                + "&entity=musicArtist&limit=1";
+                + "&entity=musicArtist&limit=1&country=BR";
 
         HttpRequest reqArtista = HttpRequest.newBuilder().uri(URI.create(urlBuscaArtista)).GET().build();
         HttpResponse<String> respArtista = cliente.send(reqArtista, HttpResponse.BodyHandlers.ofString());
@@ -143,15 +142,13 @@ public class ServicoBuscaMusicas {
         JsonObject jsonArtista = JsonParser.parseString(respArtista.body()).getAsJsonObject();
         JsonArray resultadosArtista = jsonArtista.getAsJsonArray("results");
 
-        if (resultadosArtista.isEmpty()) return topHits; // Artista não encontrado
+        if (resultadosArtista.isEmpty()) return topHits;
 
         long artistId = resultadosArtista.get(0).getAsJsonObject().get("artistId").getAsLong();
 
-
-
-        
-        // Passo 2: Buscar as top músicas vinculadas a esse ID de artista
-        String urlLookup = "https://itunes.apple.com/lookup?id=" + artistId + "&entity=song&limit=" + (limiteHits + 1);
+        // Passo 2: Buscar as top músicas desse artista, também no catálogo BR
+        String urlLookup = "https://itunes.apple.com/lookup?id=" + artistId 
+                + "&entity=song&limit=" + (limiteHits + 1) + "&country=BR";
         HttpRequest reqLookup = HttpRequest.newBuilder().uri(URI.create(urlLookup)).GET().build();
         HttpResponse<String> respLookup = cliente.send(reqLookup, HttpResponse.BodyHandlers.ofString());
 
@@ -160,8 +157,6 @@ public class ServicoBuscaMusicas {
 
         for (JsonElement el : resultadosLookup) {
             JsonObject item = el.getAsJsonObject();
-            
-            // O primeiro resultado do lookup de artista é o próprio artista, ignoramos ele verificando wrapperType
             if (item.has("wrapperType") && "artist".equals(item.get("wrapperType").getAsString())) {
                 continue;
             }
