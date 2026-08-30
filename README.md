@@ -60,7 +60,3 @@ O catálogo de músicas é montado com `ImportaMusicas.java`, que busca as faixa
 3. Digite seu palpite no campo de resposta (com autocomplete)
 4. Errou? O próximo trecho, um pouco maior, é liberado
 5. Acertou ou esgotou as 6 tentativas? A música é revelada com capa e link para ouvir completa
-
-## Licença
-
-Projeto pessoal, sem licença definida.
