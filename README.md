@@ -17,7 +17,7 @@ Jogo de adivinhar músicas (estilo Heardle)  (adivinhação musical por trecho d
 - Java + Spring Boot
 - PostgreSQL (com `unaccent` e `regexp_replace` para busca fuzzy)
 - iTunes Search API (dados e preview de áudio das músicas)
-- Last.fm e Deezer API (top tracks por artista, usadas na curadoria do catálogo)
+- Last.fm e Deezer API (top tracks por artista, usadas para manter um catálogo completo e popular)
 - Gson (parsing de JSON das APIs externas)
 
 **Frontend**
