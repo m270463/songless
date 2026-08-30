@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.sql.DataSource;
 
@@ -74,17 +75,38 @@ public class MusicaRepositorio {
     
     }
 
-public Musica escolherAleatoria(String opcao, String artista) {
+public Musica escolherAleatoria(String opcao, String artista, ArrayList<Integer> idsExcluidos) {
     boolean temArtista = artista != null && !artista.isBlank() && !artista.equalsIgnoreCase("null");
+    boolean temExclusao = idsExcluidos != null && !idsExcluidos.isEmpty();
 
     String sql;
+    boolean temWhere;
     if (temArtista) {
-        sql = "SELECT * FROM musicasArtista WHERE artista = ? ORDER BY RANDOM() LIMIT 1";
+        sql = "SELECT * FROM musicasArtista WHERE artista = ?";
+        temWhere = true;
     } else if (opcao.equals("Rock") || opcao.equals("MPB") || opcao.equals("Pop")) {
-        sql = "SELECT * FROM musicasApple WHERE genero = ? ORDER BY RANDOM() LIMIT 1";
+        sql = "SELECT * FROM musicasApple WHERE genero = ?";
+        temWhere = true;
     } else {
-        sql = "SELECT * FROM musicasApple ORDER BY RANDOM() LIMIT 1";
+        sql = "SELECT * FROM musicasApple";
+        temWhere = false;
     }
+
+    if (temExclusao) {
+        String excluidos = (temWhere ? " AND id NOT IN (" : " WHERE id NOT IN (");
+        int count = 0;
+        for (Integer id : idsExcluidos) {
+            if (count == idsExcluidos.size() - 1) {
+                excluidos += (String.valueOf(id) + ")");
+                continue;
+            }
+            excluidos += (String.valueOf(id) + ",");
+            count++;
+        }
+        sql += excluidos;
+    }
+
+    sql += " ORDER BY RANDOM() LIMIT 1";
 
     try (Connection conexao = dataSource.getConnection();
          PreparedStatement stmt = conexao.prepareStatement(sql)) {

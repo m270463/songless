@@ -2,23 +2,37 @@
 // Busca uma nova música na API e prepara o player.
 
 function carregarMusica(fim) {
-    const containerJogo = document.getElementsByClassName('CardPrincipal');
     // containerJogo.disabled = true;
     botaoTocar.disabled = true;
     botaoRestart.disabled = true;
     botaoSkip.disabled = true;
     if (musicas[indiceMusicaAtual] == null || fim){
-        fetch(`/api/musica?opcao=${opcaoAtual}&artista=${artistaAtual}`)
+        const chave = chaveModoAtual();
+        const jogadas = musicasJogadas[chave] ? Array.from(musicasJogadas[chave]) :[];
+
+
+
+        fetch(`/api/musica?opcao=${opcaoAtual}&artista=${artistaAtual}&excluir=${jogadas.join(',')}`)
             .then(resposta => resposta.json())
             .then(musica => {
             if (!musica) {
+                if (jogadas.length > 0){
+                    musicasJogadas[chave] = new Set();
+                    carregarMusica(fim);
+                    return;
+                }
+
                 alert('Nenhuma música encontrada para essa opção.');
                 botaoTocar.disabled = false;
                 botaoRestart.disabled = false;
                 botaoSkip.disabled = false;
                 return;
             }
+            if (!musicasJogadas[chave])
+                musicasJogadas[chave] = new Set();  
 
+
+            musicasJogadas[chave].add(musica.id);
 
             if (modoAtual == 'Normal'){
                 musicas[indiceMusicaAtual] = musica;
@@ -35,7 +49,6 @@ function carregarMusica(fim) {
                 botaoSkip.innerHTML = svgPular;
                 player.load();
                 atualizaSvg();
-                // containerJogo.disabled = false;
             });
     }
     else{
@@ -54,3 +67,9 @@ function carregarMusica(fim) {
         atualizaSvg();
     }
 };
+
+
+
+function chaveModoAtual() {
+    return modoAtual === 'Artista' ? `artista:${artistaAtual}` : `opcao:${opcaoAtual}`;
+}

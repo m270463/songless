@@ -200,6 +200,9 @@ botaoConfirmar.addEventListener('click', async function(){
         clearTimeout(temporizador);
         textoConfirmar.classList.remove('correto','errado');
     },1000);
+
+    listaSugestoesArtistas.innerHTML = '';
+    atualizarProgressoBarra(0);
 });
 
 async function validaArtista(termo){
