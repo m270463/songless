@@ -33,6 +33,14 @@ campoArtista.addEventListener('input', function() {
 async function buscarSugestoes(termo,campo) {
     const resp = await fetch(`/api/autocomplete?termo=${encodeURIComponent(termo)}&campo=${campo}&modo=${modoAtual}`);
     const sugestoes = await resp.json();
+
+    const campoAtual = (campo == 'Resposta') ? campoResposta : campoArtista;
+    if (campoAtual.value.length < 2) {
+        return; 
+    }
+
+
+
     if (campo == 'Resposta'){
         exibirSugestoes(sugestoes,listaSugestoes,campo);
     }

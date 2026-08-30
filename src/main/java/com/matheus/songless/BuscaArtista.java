@@ -19,9 +19,10 @@ public class BuscaArtista {
     }
 
     public boolean validaArtista(String termo){
-        String sql = "SELECT artista FROM musicasArtista WHERE artista = ?";
+        String sql = "SELECT artista FROM musicasapple " +
+                    "WHERE lower(regexp_replace(unaccent(artista), '[^a-zA-Z0-9]', '', 'g')) = lower(regexp_replace(unaccent(?), '[^a-zA-Z0-9]', '', 'g'))";
         try (Connection conexao = dataSource.getConnection();
-             PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setString(1, termo);
             try (ResultSet rs = pstmt.executeQuery()) {
                 return rs.next();

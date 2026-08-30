@@ -18,7 +18,7 @@ function gerenciarChute() {
         return;
     }
 
-    if (chute.split(' - ')[0].toLowerCase() == musicaAtual.nome.toLowerCase()) {
+    if (normalizarTexto(chute.split(' - ')[0].toLowerCase()) == normalizarTexto(musicaAtual.nome.toLowerCase())) {
         adicionarHistorico(campoResposta.value, true);
         vencerJogo();
         return;
@@ -26,6 +26,14 @@ function gerenciarChute() {
     adicionarHistorico(campoResposta.value, false);
     campoResposta.value = '';
     avancarNivel();
+}
+function normalizarTexto(texto) {
+    return texto
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[,.!?;:'"()]/g, '')
+        .replace(/\s+/g, '')         
+        .toLowerCase();
 }
 
 function avancarNivel() {
