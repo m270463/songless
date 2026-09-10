@@ -72,36 +72,36 @@ public class ImportaMusicas {
 
 
         Map<String, Integer> hashMpb = new HashMap<>(Map.ofEntries(
-            Map.entry("Gal Costa",25),
-            Map.entry("Chico Buarque",20),
-            Map.entry("Milton Nascimento",20),
-            Map.entry("Maria Bethânia",15),
-            Map.entry("Roupa Nova",10),
-            Map.entry("Zizi Possi", 25),
-            Map.entry("Antônio Carlos Jobim",15),
-            Map.entry("Ivan Lins", 7),
-            Map.entry("Elis Regina", 20),
-            Map.entry("Djavan", 25),
-            Map.entry("Tim Maia", 15),
-            Map.entry("Gonzaguinha", 10),
-            Map.entry("Gilberto Gil", 20),
-            Map.entry("Rita Lee", 20),
-            Map.entry("Marina Lima", 10),
-            Map.entry("Lulu Santos", 20),
-            Map.entry("Guilherme Arantes", 15),
-            Map.entry("Secos&Molhados", 5),
-            Map.entry("Cartola", 10),
-            Map.entry("Marisa Monte", 15),
-            Map.entry("Nando Reis", 10),
-            Map.entry("Jorge Vercillo", 15),
-            Map.entry("Emilio Santiago", 5),
-            Map.entry("Novos Baianos", 5),
-            Map.entry("Titãs",5),
-            Map.entry("Lo Borges", 5),
-            Map.entry("Raul Seixas", 5),
-            Map.entry("Ana Carolina", 15),
-            Map.entry("Adriana Calcanhotto", 10),
-            Map.entry("Caetano Veloso", 15)
+            // Map.entry("Gal Costa",25),
+            // Map.entry("Chico Buarque",20),
+            // Map.entry("Milton Nascimento",20),
+            // Map.entry("Maria Bethânia",15),
+            // Map.entry("Roupa Nova",10),
+            // Map.entry("Zizi Possi", 25),
+            // Map.entry("Antônio Carlos Jobim",15),
+            // Map.entry("Ivan Lins", 7),
+            // Map.entry("Elis Regina", 20),
+            // Map.entry("Djavan", 25),
+            // Map.entry("Tim Maia", 15),
+            // Map.entry("Gonzaguinha", 10),
+            // Map.entry("Gilberto Gil", 20),
+            // Map.entry("Rita Lee", 20),
+            // Map.entry("Marina Lima", 10),
+            // Map.entry("Lulu Santos", 20),
+            // Map.entry("Guilherme Arantes", 15),
+            // Map.entry("Secos&Molhados", 5),
+            // Map.entry("Cartola", 10),
+            // Map.entry("Marisa Monte", 15),
+            // Map.entry("Nando Reis", 10),
+            // Map.entry("Jorge Vercillo", 15),
+            // Map.entry("Emilio Santiago", 5),
+            // Map.entry("Novos Baianos", 5),
+            // Map.entry("Titãs",5),
+            // Map.entry("Lo Borges", 5),
+            // Map.entry("Raul Seixas", 5),
+            // Map.entry("Ana Carolina", 15),
+            Map.entry("Adriana Calcanhotto", 10)
+            // Map.entry("Caetano Veloso", 15)
 
         ));
 
@@ -157,7 +157,7 @@ Map<String, Map<String, Integer>> hashGeral = Map.of(
             artista = entrada.getKey();
             
             System.out.println("\n=== Buscando Top Hits: " + artista + " ===");
-            musicas = servicoBusca.buscaTopMusicasDoArtista(artista, genero, limite);
+            musicas = servicoBusca.buscaMusicasPorArtista(artista, genero, 15);
             Set<String> nomesSalvos = new HashSet<>();
             int totalSalvosArtista = 0;
 
