@@ -13,8 +13,7 @@ function carregarMusica(fim) {
 
 
         fetch(`/api/musica?opcao=${opcaoAtual}&artista=${artistaAtual}&excluir=${jogadas.join(',')}`)
-            .then(resposta => resposta.json())
-            .catch(() => null)
+            .then(resposta => resposta.status === 204 ? null : resposta.json())
             .then(musica => {
             if (!musica) {
                 if (jogadas.length > 0){
