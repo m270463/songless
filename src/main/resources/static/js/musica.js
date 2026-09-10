@@ -14,6 +14,7 @@ function carregarMusica(fim) {
 
         fetch(`/api/musica?opcao=${opcaoAtual}&artista=${artistaAtual}&excluir=${jogadas.join(',')}`)
             .then(resposta => resposta.json())
+            .catch(() => null)
             .then(musica => {
             if (!musica) {
                 if (jogadas.length > 0){
