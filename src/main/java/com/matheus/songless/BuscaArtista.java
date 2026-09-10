@@ -19,7 +19,7 @@ public class BuscaArtista {
     }
 
     public boolean validaArtista(String termo){
-        String sql = "SELECT artista FROM musicasapple " +
+        String sql = "SELECT artista FROM musicasArtista " +
                     "WHERE lower(regexp_replace(unaccent(artista), '[^a-zA-Z0-9]', '', 'g')) = lower(regexp_replace(unaccent(?), '[^a-zA-Z0-9]', '', 'g'))";
         try (Connection conexao = dataSource.getConnection();
             PreparedStatement pstmt = conexao.prepareStatement(sql)) {

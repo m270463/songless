@@ -35,10 +35,10 @@ public class BuscaAutoComplete {
     else{
         sql = "SELECT nome, artista FROM musicasArtista " +
               "WHERE regexp_replace(unaccent(nome), '[^a-zA-Z0-9]', '', 'g') ILIKE '%' || regexp_replace(unaccent(?), '[^a-zA-Z0-9]', '', 'g') || '%' " +
-              "LIMIT 10";
+              "LIMIT 25";
     }
     try (Connection conexao = dataSource.getConnection();
-         PreparedStatement stmt = conexao.prepareStatement(sql)) {
+         PreparedStatement stmt = conexao.prepareStatement(sql)) { 
 
         stmt.setString(1, termo);   
         if (modo.equals("Normal"))
